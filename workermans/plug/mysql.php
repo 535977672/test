@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 入口文件
+ * 入口文件 
  * onWorkerStart回调中初始化数据库连接
  */
 use Workerman\Worker;
