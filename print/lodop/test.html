@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script language="javascript" src="LodopFuncs.js"></script>
+        
+        <object  id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0> 
+               <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0></embed>
+        </object>
+    </head>
+    <body>
+        <div onclick="pt()">TODO write content</div>
+        
+        <div style="width: 100%; text-align: center;"><div style="width: 48%; float: left;"><p>哈哈</p><p>小样</p><p>牛掰</p></div><div style="width: 48%; float: right;"><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>小样</p><p>牛掰</p><p>给力</p></div></div>
+        <script type='text/javascript'>
+            var LODOP=getLodop();
+            var html = '<div style="width: 100%; text-align: center;  border:1px solid red;"><div style="width: 48%; float: left;"><p>哈哈</p><p>小样</p><p>牛掰</p></div><div style="width: 48%; float: right;"><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>哈哈</p><p>小样</p><p>牛掰</p><p>给力</p></div></div>';
+            
+            function pt (){
+                //PRINT_INIT(strPrintTaskName)打印初始化
+                LODOP.PRINT_INIT("打印html测试");
+
+                //ADD_PRINT_HTM(Top,Left,Width,Height,strHtmlContent)
+                //增加超文本打印项，设定该打印项在纸张内的位置和区域大小，实现超文本控制打印。
+                //Top： 上边距  Left： 左边距 Width： 宽度  Height： 高度
+                //strHtmlContent： 超文本代码内容，字符型，未限制长度。可以是一个完整的页面超文本代码，或者是一个代码段落，也可以是URL:web地址形式的URL地址。
+                LODOP.ADD_PRINT_HTM('4.5mm','0','48mm','',html);
+
+                //ADD_PRINT_LINE(Top1,Left1, Top2, Left2,intLineStyle, intLineWidth) 默认px
+                //增加直线，设定直线的两个端点，设定直线的线条类型和线宽。
+                //intLineStyle：线条类型，数字型，0--实线 1--破折线 2--点线 3--点划线 4--双点划线   缺省线条是实线。
+                //intLineWidth：线条宽，整数型，单位是(打印)像素，缺省值是1，非实线的线条宽也是0。
+                //LODOP.ADD_PRINT_LINE(200,'5mm',200,'53mm',0,1);
+
+                //ADD_PRINT_TEXT(Top,Left,Width,Height,strContent)纯文本
+                //LODOP.ADD_PRINT_TEXT(205,'5mm','48mm',20,""+(new Date()).toLocaleDateString()+" "+(new Date()).toLocaleTimeString());			
+
+                //SET_PRINT_PAGESIZE(intOrient, PageWidth,PageHeight,strPageName)
+                //设定打印纸张为固定纸张或自适应内容高，并设定相关大小值或纸张名及打印方向
+                //intOrient： 打印方向及纸张类型，数字型， 1---纵(正)向打印，固定纸张；  2---横向打印，固定纸张； 3---纵(正)向打印，宽度固定，高度按打印内容的高度自适应；
+                //PageWidth,PageHeight默认单位0.1毫米 宽或高无效时下面的strPageName才起作用。
+                LODOP.SET_PRINT_PAGESIZE(3,'48mm','4.5',"");//这里3表示纵向打印且纸高“按内容的高度”；
+                LODOP.PREVIEW();//打印预览输出页。 显示打印预览界面。如果预览界面没有被嵌入页面中，而是被弹出窗口，那么关闭窗口时会返回数字结果值，该数字大于0时表示被实际打印的次数。
+                //LODOP.PRINT();//不经打印预览的直接打印 打印机开始实际打印，返回逻辑结果，正确打印时返回真，打印出错时返回假。
+            }
+        </script>
+    </body>
+</html>

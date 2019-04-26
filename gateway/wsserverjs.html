@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    </head>
+    <body>
+        <div id="app4">
+            点我
+        </div>
+        <script type="text/javascript">
+/*
+websocket允许通过JavaScript建立与远程服务器的连接，从而实现客户端与服务器间双向的通信。在websocket中有两个方法：　　
+　　　　1、send() 向远程服务器发送数据
+　　　　2、close() 关闭该websocket链接
+　　websocket同时还定义了几个监听函数　　　　
+　　　　1、onopen 当网络连接建立时触发该事件
+　　　　2、onerror 当网络发生错误时触发该事件
+　　　　3、onclose 当websocket被关闭时触发该事件
+　　　　4、onmessage 当websocket接收到服务器发来的消息的时触发的事件，也是通信中最重要的一个监听事件。msg.data
+　　websocket还定义了一个readyState属性，这个属性可以返回websocket所处的状态：
+　　　　1、CONNECTING(0) websocket正尝试与服务器建立连接
+　　　　2、OPEN(1) websocket与服务器已经建立连接
+　　　　3、CLOSING(2) websocket正在关闭与服务器的连接
+　　　　4、CLOSED(3) websocket已经关闭了与服务器的连接
+
+　　websocket的url开头是ws，如果需要ssl加密可以使用wss，当我们调用websocket的构造方法构建一个websocket对象（new WebSocket(url)）的之后，就可以进行即时通信了。
+ */
+            //在http协议下使用ws，在https协议下使用wss
+            var wsServer = 'ws://127.0.0.1:7272';
+            var websocket = new WebSocket(wsServer);
+            websocket.onopen = function (evt) {
+                console.log("Connected to WebSocket server.");
+                
+                //心跳检测
+                heartCheck.reset().start();
+            };
+
+            websocket.onclose = function (evt) {
+                console.log("Disconnected");
+                
+                //可重连 new WebSocket(wsServer);
+            };
+
+            websocket.onmessage = function (evt) {
+                //console.log(evt);
+                var data = $.parseJSON(evt.data);
+                console.log(data);
+                
+                //心跳检测
+                if(data.type == 'ping'){
+                    heartCheck.reset().start();
+                    return true;
+                }
+                
+                if(data.type == 'message'){
+                    console.log('data.message: ' + data.message);
+                    
+                    $.get('wsserver.php', {
+                        'client_id':data.client_id,
+                        'message':data.message
+                    },function(res){
+                        var ress = $.parseJSON(res);
+                        console.log('data.get: ');
+                        console.log(ress);
+                    });
+                }
+                if(data.type == 'message-get'){
+                    console.log('data.message-get: ');
+                    console.log(data.data);
+                }
+                heartCheck.reset().start();
+            };
+
+            websocket.onerror = function (evt, e) {
+                console.log('Error occured: ' + evt.data);
+                
+                //可重连 new WebSocket(wsServer);
+            };
+            $('#app4').click(function(){
+                websocket.send('f[sdf8888888888888888');
+            });
+            
+            //心跳检测
+            var heartCheck = {
+                timeout: 10000,//60秒
+                timeoutObj: null,
+                reset: function(){
+                    clearTimeout(this.timeoutObj);
+                    return this;
+                },
+                start: function(){
+                    this.timeoutObj = setTimeout(function(){
+                        websocket.send("ping");
+                    }, this.timeout);
+                }
+            };
+        </script>
+    </body>
+</html>

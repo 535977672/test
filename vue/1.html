@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="vue.js"></script>
+        <script src="vue-router.js"></script>
+        <script src="vue-resource.js"></script>
+        <script src="vue2.js"></script>
+    </head>
+    <body>
+        <div id="app4">
+            {{ message }}
+        </div>
+        <div id="app1">
+            {{ message }}
+        </div>
+        
+        
+<script type="text/javascript">
+    window.onload = function(){
+        var $url = 'advs/index/539/0';
+        //var $url = 'vue/1.php';
+        toAjax($url, {}, 1, function(res){
+            $data = res.data;
+            console.log($data);
+            var app2 = new Vue({
+                el: '#app4',
+                data: {
+                  message: 111
+                }
+            });
+        });
+        
+      
+    };
+</script>
+    </body>
+</html>

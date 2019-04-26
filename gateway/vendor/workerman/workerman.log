@@ -1,0 +1,225 @@
+2019-04-24 06:43:07 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:43:16 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:43:17 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:43:18 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:43:19 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:43:20 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:43:20 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:45:46 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:45:51 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:59:20 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 06:59:22 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:01:25 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:03:14 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:03:16 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:03:17 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:03:18 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:04:25 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:04:26 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:04:27 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:04:28 Bad request for Register service. Request info(IP:127.0.0.1, Request Buffer:GET / HTTP/1.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 07:54:00 exception 'Exception' with message 'You can't send(array) to client, you need to convert it to a string. ' in D:\mf\test\gateway\vendor\workerman\workerman-for-win\Protocols\Websocket.php:225
+Stack trace:
+#0 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(310): Workerman\Protocols\Websocket::encode(Array, Object(Workerman\Connection\TcpConnection))
+#1 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(692): Workerman\Connection\TcpConnection->send(Array)
+#2 [internal function]: GatewayWorker\Gateway->onWorkerMessage(Object(Workerman\Connection\TcpConnection), Array)
+#3 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(629): call_user_func(Array, Object(Workerman\Connection\TcpConnection), Array)
+#4 [internal function]: Workerman\Connection\TcpConnection->baseRead(Resource id #52)
+#5 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Events\Select.php(286): call_user_func_array(Array, Array)
+#6 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(856): Workerman\Events\Select->loop()
+#7 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(279): Workerman\Worker->run()
+#8 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(473): GatewayWorker\Gateway->run()
+#9 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(382): Workerman\Worker::runAllWorkers()
+#10 D:\mf\test\gateway\Applications\Index\start_gateway_websocket.php(66): Workerman\Worker::runAll()
+#11 {main}
+2019-04-24 07:55:18 exception 'Exception' with message 'You can't send(NULL) to client, you need to convert it to a string. ' in D:\mf\test\gateway\vendor\workerman\workerman-for-win\Protocols\Websocket.php:225
+Stack trace:
+#0 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(310): Workerman\Protocols\Websocket::encode(NULL, Object(Workerman\Connection\TcpConnection))
+#1 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(692): Workerman\Connection\TcpConnection->send(NULL)
+#2 [internal function]: GatewayWorker\Gateway->onWorkerMessage(Object(Workerman\Connection\TcpConnection), Array)
+#3 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(629): call_user_func(Array, Object(Workerman\Connection\TcpConnection), Array)
+#4 [internal function]: Workerman\Connection\TcpConnection->baseRead(Resource id #37)
+#5 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Events\Select.php(286): call_user_func_array(Array, Array)
+#6 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(856): Workerman\Events\Select->loop()
+#7 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(279): Workerman\Worker->run()
+#8 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(473): GatewayWorker\Gateway->run()
+#9 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(382): Workerman\Worker::runAllWorkers()
+#10 D:\mf\test\gateway\Applications\Index\start_gateway_websocket.php(66): Workerman\Worker::runAll()
+#11 {main}
+2019-04-24 07:58:33 exception 'Exception' with message 'You can't send(NULL) to client, you need to convert it to a string. ' in D:\mf\test\gateway\vendor\workerman\workerman-for-win\Protocols\Websocket.php:225
+Stack trace:
+#0 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(310): Workerman\Protocols\Websocket::encode(NULL, Object(Workerman\Connection\TcpConnection))
+#1 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(692): Workerman\Connection\TcpConnection->send(NULL)
+#2 [internal function]: GatewayWorker\Gateway->onWorkerMessage(Object(Workerman\Connection\TcpConnection), Array)
+#3 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(629): call_user_func(Array, Object(Workerman\Connection\TcpConnection), Array)
+#4 [internal function]: Workerman\Connection\TcpConnection->baseRead(Resource id #38)
+#5 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Events\Select.php(286): call_user_func_array(Array, Array)
+#6 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(856): Workerman\Events\Select->loop()
+#7 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(279): Workerman\Worker->run()
+#8 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(473): GatewayWorker\Gateway->run()
+#9 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(382): Workerman\Worker::runAllWorkers()
+#10 D:\mf\test\gateway\Applications\Index\start_gateway_websocket.php(66): Workerman\Worker::runAll()
+#11 {main}
+2019-04-24 07:59:11 exception 'Exception' with message 'You can't send(NULL) to client, you need to convert it to a string. ' in D:\mf\test\gateway\vendor\workerman\workerman-for-win\Protocols\Websocket.php:225
+Stack trace:
+#0 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(310): Workerman\Protocols\Websocket::encode(NULL, Object(Workerman\Connection\TcpConnection))
+#1 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(692): Workerman\Connection\TcpConnection->send(NULL)
+#2 [internal function]: GatewayWorker\Gateway->onWorkerMessage(Object(Workerman\Connection\TcpConnection), Array)
+#3 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(629): call_user_func(Array, Object(Workerman\Connection\TcpConnection), Array)
+#4 [internal function]: Workerman\Connection\TcpConnection->baseRead(Resource id #37)
+#5 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Events\Select.php(286): call_user_func_array(Array, Array)
+#6 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(856): Workerman\Events\Select->loop()
+#7 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(279): Workerman\Worker->run()
+#8 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(473): GatewayWorker\Gateway->run()
+#9 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(382): Workerman\Worker::runAllWorkers()
+#10 D:\mf\test\gateway\Applications\Index\start_gateway_websocket.php(66): Workerman\Worker::runAll()
+#11 {main}
+2019-04-24 07:59:40 exception 'Exception' with message 'You can't send(NULL) to client, you need to convert it to a string. ' in D:\mf\test\gateway\vendor\workerman\workerman-for-win\Protocols\Websocket.php:225
+Stack trace:
+#0 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(310): Workerman\Protocols\Websocket::encode(NULL, Object(Workerman\Connection\TcpConnection))
+#1 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(692): Workerman\Connection\TcpConnection->send(NULL)
+#2 [internal function]: GatewayWorker\Gateway->onWorkerMessage(Object(Workerman\Connection\TcpConnection), Array)
+#3 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Connection\TcpConnection.php(629): call_user_func(Array, Object(Workerman\Connection\TcpConnection), Array)
+#4 [internal function]: Workerman\Connection\TcpConnection->baseRead(Resource id #37)
+#5 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Events\Select.php(286): call_user_func_array(Array, Array)
+#6 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(856): Workerman\Events\Select->loop()
+#7 D:\mf\test\gateway\vendor\workerman\gateway-worker-for-win\src\Gateway.php(279): Workerman\Worker->run()
+#8 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(473): GatewayWorker\Gateway->run()
+#9 D:\mf\test\gateway\vendor\workerman\workerman-for-win\Worker.php(382): Workerman\Worker::runAllWorkers()
+#10 D:\mf\test\gateway\Applications\Index\start_gateway_websocket.php(66): Workerman\Worker::runAll()
+#11 {main}
+2019-04-24 12:02:38 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:39 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:39 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:40 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:40 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:41 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:41 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:42 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:42 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:43 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:43 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:44 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:44 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:45 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:45 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:46 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:46 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:47 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:47 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:48 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:48 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:49 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:49 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:50 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:50 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:51 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:51 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:52 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:52 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:53 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:53 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:54 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:54 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:55 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:55 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:56 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:56 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:57 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:57 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:58 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:58 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:59 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:02:59 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:00 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:00 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:01 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:01 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:02 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:02 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:03 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:03 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:04 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:04 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:05 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:05 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:06 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:06 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:07 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:07 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:08 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:08 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:09 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:09 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:10 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:10 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:11 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:11 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:12 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:12 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:13 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:13 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:14 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:14 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:15 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:15 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:16 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:16 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:17 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:17 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:18 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:18 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:19 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:19 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:20 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:20 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:21 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:21 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:22 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:22 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:23 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:23 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:24 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:24 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:25 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:25 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:26 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:26 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:27 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:03:27 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:08 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:08 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:09 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:09 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:10 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:10 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:11 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:11 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:12 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:12 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:13 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:13 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:14 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:14 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:15 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:15 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:16 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:16 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:17 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:17 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:18 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:18 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:19 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:19 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:20 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:20 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:21 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:21 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:22 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:22 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:23 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:24 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:36:24 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:47:19 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:47:20 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail
+2019-04-24 12:47:20 Register auth timeout (127.0.0.1). See http://wiki.workerman.net/Error4 for detail

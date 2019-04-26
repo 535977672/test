@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    </head>
+    <body>
+        <div id="app4">
+            <input type="text" name="ss" id="ss" value="10">
+            <div id="app5">发布</div>
+        </div>
+        <script type="text/javascript">
+
+            var wsServer = 'ws://127.0.0.1:2348';
+            var websocket = new WebSocket(wsServer);
+            websocket.onopen = function (evt) {
+                console.log("Connected to WebSocket server.");
+            };
+
+            websocket.onclose = function (evt) {
+                console.log("Disconnected");
+            };
+
+            websocket.onmessage = function (evt) {
+                var data = $.parseJSON(evt.data);
+                console.log(data);
+            };
+
+            websocket.onerror = function (evt, e) {
+                console.log('Error occured: ' + evt.data);
+            };
+            $('#app5').click(function(){
+                var str = $('#ss').val();
+                websocket.send(str);
+            });
+        </script>
+    </body>
+</html>

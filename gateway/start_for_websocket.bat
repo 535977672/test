@@ -1,0 +1,2 @@
+php Applications\Index\start_register.php Applications\Index\start_gateway_websocket.php Applications\Index\start_businessworker.php
+pause
