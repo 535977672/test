@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    </head>
+    <body>
+        <div id="app4">
+            <p>控制器: <input type="text" name="con" id="con" value="Web"></p>
+            <p>方法： <input type="text" name="action" id="action" value="index"></p>
+            <p>参数1： <input type="text" name="params1" id="params1" value="111"></p>
+            <div id="app5">发布</div>
+            <pre>
+                <code id="show"></code>
+            </pre>
+        </div>
+        <script type="text/javascript">
+
+            var wsServer = 'ws://127.0.0.1:2347';
+            var websocket = new WebSocket(wsServer);
+
+            websocket.onmessage = function (evt) {
+                var data = $.parseJSON(evt.data);
+                console.log(data);
+                $('#show').html(evt.data);
+            };
+            
+            $('#app5').click(function(){
+                var con = $('#con').val()
+                ,action = $('#action').val()
+                ,params1 = $('#params1').val();
+                if(con && action){
+                    var o = {
+                        "con":con,
+                        "action":action,
+                        "params":{
+                            "params1":params1
+                        }
+                    };
+                    websocket.send(JSON.stringify(o));
+                }
+            });
+        </script>
+    </body>
+</html>

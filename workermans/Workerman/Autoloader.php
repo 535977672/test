@@ -47,6 +47,8 @@ class Autoloader
         $class_path = str_replace('\\', DIRECTORY_SEPARATOR, $name);
         if (strpos($name, 'Workerman\\') === 0) {
             $class_file = __DIR__ . substr($class_path, strlen('Workerman')) . '.php';
+        //}else if(substr($name, -10) == 'Controller'){
+        //    $class_file = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'controller' . "substr($class_path, 0, -10).php";
         } else {
             if (self::$_autoloadRootPath) {
                 $class_file = self::$_autoloadRootPath . DIRECTORY_SEPARATOR . $class_path . '.php';
