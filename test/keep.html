@@ -12,17 +12,23 @@
     
     <script type="text/javascript">
         $(document).ready(function(){
+            var url = '';
+            
+            //url = 'http://192.168.174.200:10008';
+            url = 'http://192.168.5.200';
+            
             setInterval(tt, 500);
         
             function tt(){
                 $.ajax({
                     type:"GET",
                     dataType:"String",
-                    url:"http://192.168.174.200:10008",
+                    url:url,
                     success:function(re){
                         $("#keep").append('<p>'+re+'</p>');
                     },
                     error:function(re){
+                        console.log(re);
                         $("#keep").append('<p>'+re.responseText+'</p>');
                     }
                 });
