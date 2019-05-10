@@ -6,12 +6,19 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     
     <style>
+        #mainbody{
+            width: 600px;
+            height: 600px;
+            border: 2px solid #bb4682ab;
+            border-radius: 50%;
+            overflow: hidden;
+            padding: 5px;
+            background-color: #f3eee7;
+        }
         #main{
             width: 600px;
             height: 600px;
             position: relative;
-            border: 1px solid #353535;
-            border-radius: 50%;
             overflow: hidden;
         }
         #main>div{
@@ -61,14 +68,17 @@
         #sec>div{
             height: 300px;
             top: 0;
+            color: rgb(255, 0, 163);
         }
         #min>div{
             height: 250px;
             top: 50px;
+            color: rgba(29, 76, 216, 0.78);
         }
         #hour>div{
             height: 200px;
             top: 100px;
+            color: rgb(230, 45, 13);
         }
     </style>
     <style>
@@ -208,7 +218,7 @@
 </head>
 
 <body>
-    <div id="main"></div>
+    <div id="mainbody"><div id="main"></div></div>
     
     <script type="text/javascript">
         var $sec = [
