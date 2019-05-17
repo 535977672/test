@@ -1,0 +1,82 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>live cam 录像页面</title>
+</head>
+<body>
+    <video autoplay id="sourcevid" style="width:320;height:240px"></video>
+    <br>
+    提示：最好用火狐测试，谷歌浏览器升级了安全策略，谷歌浏览器只能在https下才能利用html5打开摄像头。
+
+    <canvas id="output" style="display:none"></canvas>
+
+    <script type="text/javascript" charset="utf-8">
+
+        var socket = new WebSocket("ws://"+document.domain+":8080");
+        var back = document.getElementById('output');
+        var backcontext = back.getContext('2d');
+        var video = document.getElementsByTagName('video')[0];
+        
+        var success = function(stream){
+            video.src = window.URL.createObjectURL(stream);
+        }
+
+        socket.onopen = function(){
+            draw();
+        }
+
+        var draw = function(){
+            try{
+                backcontext.drawImage(video,0,0, back.width, back.height);
+            }catch(e){
+                if (e.name == "NS_ERROR_NOT_AVAILABLE") {
+                    return setTimeout(draw, 100);
+                } else {
+                    throw e;
+                }
+            }
+            if(video.src){
+                socket.send(back.toDataURL("image/jpeg", 0.5));
+            }
+            setTimeout(draw, 100);
+        }
+        //navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
+        //navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        //navigator.getUserMedia({video:true, audio:false}, success, console.log);
+        
+        
+        navigator.mediaDevices.getUserMedia = navigator.mediaDevices.getUserMedia || navigator.mediaDevices.webkitGetUserMedia ||
+        navigator.mediaDevices.mozGetUserMedia || navigator.mediaDevices.msGetUserMedia;
+
+        navigator.mediaDevices.getUserMedia({video:true, audio:false}, success, console.log);
+        //Uncaught (in promise) DOMException: Only secure origins are allowed
+        //https访问
+        
+        //新代码应当使用 Navigator.mediaDevices.getUserMedia()
+        //Navigator.getUserMedia()方法提醒用户需要使用音频（0或者1）和（0或者1）视频输入设备，
+        //比如相机，屏幕共享，或者麦克风。如果用户给予许可，successCallback回调就会被调用，
+        //MediaStream对象作为回调函数的参数。如果用户拒绝许可或者没有媒体可用，errorCallback就会被调用
+        //navigator.getUserMedia ( constraints, successCallback, errorCallback );
+        /*navigator.getUserMedia = navigator.getUserMedia ||
+                         navigator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia;
+
+        if (navigator.getUserMedia) {
+           navigator.getUserMedia({ audio: true, video: { width: 1280, height: 720 } },
+              function(stream) {
+                 var video = document.querySelector('video');
+                 video.src = window.URL.createObjectURL(stream);
+                 video.onloadedmetadata = function(e) {
+                   video.play();
+                 };
+              },
+              function(err) {
+                 console.log("The following error occurred: " + err.name);
+              }
+           );
+        } else {
+           console.log("getUserMedia not supported");
+        }*/
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/> 
+    <title>js中开启多线程</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+
+<body>
+    <div id="keep"></div>
+    
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            //js中开启多线程
+            
+            //1.通过 worker = new Worker( url ) 加载一个JS文件来创建一个worker，同时返回一个worker实例。
+            //2.通过worker.postMessage( data ) 方法来向worker发送数据。
+            //3.绑定worker.onmessage方法来接收worker发送过来的数据。
+            //4.可以使用 worker.terminate() 来终止一个worker的执行。
+            //worker子线程：
+            //1.通过postMessage( data ) 方法来向主线程发送数据。
+            //2.绑定onmessage方法来接收主线程发送过来的数据。
+            var worker = new Worker('w.js');
+            worker.postMessage($);
+            worker.onmessage = function(ev){
+                console.log(ev);
+            };
+        });
+        
+	</script>
+</body>    
+</html>

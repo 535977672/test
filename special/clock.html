@@ -37,11 +37,11 @@
             -o-transform-origin:50% 50%;
             -moz-transform: rotate(0deg) translateZ(0); 
             -moz-transform-origin:50% 50%;
-            transition-duration:1s;
-            -webkit-transition-duration:1s;
-            -ms-transition-duration:1s;
-            -o-transition-duration:1s;
-            -moz-transition-duration:1s;
+            transition-duration:.7s;
+            -webkit-transition-duration:.7s;
+            -ms-transition-duration:.7s;
+            -o-transition-duration:.7s;
+            -moz-transition-duration:.7s;
             transition-property:transform,-ms-transform,-webkit-transform;
             -webkit-transition-property:transform,-ms-transform,-webkit-transform;
             -ms-transition-property:transform,-ms-transform,-webkit-transform;
@@ -51,7 +51,7 @@
         #main>div>div{
             position: absolute;
             width: 20px;
-            left: 295px;
+            left: 290px;
             text-align: center;
             font-size: 80%;
             transform: rotate(0deg) translateZ(0);
@@ -218,8 +218,9 @@
 </head>
 
 <body>
+    <div style="height: 50px;margin-top: 50px;"></div>
     <div id="mainbody"><div id="main"></div></div>
-    
+    <div style="height: 1000px;margin-top: 500px;"></div>
     <script type="text/javascript">
         var $sec = [
             "零零","零壹","零贰","零叁","零肆","零伍","零陆","零柒","零捌","零玖",
@@ -337,6 +338,7 @@
                     "-o-transform":"rotate("+mincrotate+"deg) translateZ(0)",
                     "-moz-transform":"rotate("+mincrotate+"deg) translateZ(0)"});
             }
+            secrotate++;
             $("#sec").css({
                 "transform":"rotate("+secrotate+"deg) translateZ(0)",
                 "-ms-transform":"rotate("+secrotate+"deg) translateZ(0)",

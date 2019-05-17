@@ -11,6 +11,7 @@
             <p>控制器: <input type="text" name="con" id="con" value="Web"></p>
             <p>方法： <input type="text" name="action" id="action" value="index"></p>
             <p>参数1： <input type="text" name="params1" id="params1" value="111"></p>
+            <p>参数2： <input type="file" name="params2" id="params2"></p>
             <div id="app5">发布</div>
             <pre>
                 <code id="show"></code>
@@ -30,16 +31,49 @@
             $('#app5').click(function(){
                 var con = $('#con').val()
                 ,action = $('#action').val()
-                ,params1 = $('#params1').val();
-                if(con && action){
-                    var o = {
-                        "con":con,
-                        "action":action,
-                        "params":{
-                            "params1":params1
-                        }
-                    };
-                    websocket.send(JSON.stringify(o));
+                ,params1 = $('#params1').val()
+                ,params2 = ''
+                ,file = $('#params2')[0].files[0];
+                if(file){
+                    if (window.FileReader) {
+                    
+                        var reader = new FileReader();
+                        //readAsDataURL(in Blob blob),读取文件为DataURL ,图片被转换成base64编码的字符串形式，并存储在URL中，冠以mime-type
+                        reader.readAsDataURL(file);
+
+                        //异步读取操作成功完成时调用
+                        reader.onload = function (e) {
+                            //console.log(e);
+                            //console.log(reader.readyState);
+                            params2 = reader.result;
+                            if(con && action){
+                                var o = {
+                                    "con":con,
+                                    "action":action,
+                                    "params":{
+                                        "params1":params1,
+                                        "params2":params2
+                                    }
+                                };
+                                websocket.send(JSON.stringify(o));
+                            }
+                        };
+                    
+                    } else {
+                        alert("Not supported by your browser!");
+                        return false;
+                    }
+                }else{
+                    if(con && action){
+                        var o = {
+                            "con":con,
+                            "action":action,
+                            "params":{
+                                "params1":params1
+                            }
+                        };
+                        websocket.send(JSON.stringify(o));
+                    }
                 }
             });
         </script>
