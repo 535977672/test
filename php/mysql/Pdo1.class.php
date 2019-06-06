@@ -33,6 +33,7 @@ class Pdo1{
             $this->commit($rand);
             return $re;
         }catch(PDOException $e){
+            $this->rollback($rand);
             echo $e->getMessage();
             return false;
         }

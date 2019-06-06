@@ -50,9 +50,11 @@ $r = new Test;
 
 //$r->signal();
 
-$r->fork();
+//$r->fork();
 
 //$r->wait();
+
+$r->tests();
 
 class Test{
     
@@ -338,5 +340,20 @@ class Test{
         //  int(0)
         //}
         
+    }
+    
+    public function tests() {
+        $i = 3;
+        while($i){
+            $pid = pcntl_fork();
+            if ($pid == -1) {
+                die('could not fork');
+            } else if ($pid) {
+                echo $i.'-1-posix_getpid ' . posix_getpid() . '-' . time(). PHP_EOL;
+            } else {
+                echo $i.'-0-posix_getpid ' . posix_getpid() . '-' . time(). PHP_EOL;
+            }
+            $i--;
+        }
     }
 }
