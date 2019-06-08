@@ -66,7 +66,7 @@ class Ct2
                     $nnn = [];
                     $ns = [];
                     $sql = '';
-                    echo $i.'-'.date('H:i:s').PHP_EOL;
+                    //echo $i.'-'.date('H:i:s').PHP_EOL;
                 }
             }
             $stmt = '';
