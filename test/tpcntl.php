@@ -1,32 +1,53 @@
 <?php
+declare(ticks = 1);
+
+//接收程序头部加
+//ignore_user_abort();
+//
+//header('HTTP/1.1 200 OK');
+//
+//header('Content-Length:0');
+//
+//header('Connection:Close');
+//
+//flush();
+
 
 set_time_limit(0);
 ini_set('memory_limit', '-1');
 ini_set('max_execution_time', 0);
-$n = 1;
-for($i = 0; $i < $n; $i++){
-    
-    //ignore_user_abort(true);//关掉浏览器，PHP脚本也可以继续执行.
-    
-    
-    $url = [
-        '88733890','88688534','88688534','87784182','87782316','87837771',
-        '87837771','87837771','87837755','87837765','88746402','88746402','89298342',
-        '89304182','89365221','89365221','89365221','89388767','89915131','90033404',
-        '90033404','90033404','90033404','90235935',
-        ];
-    $re = doCurlGetRequest('https://blog.csdn.net/u012467744/article/details/'.$url[array_rand($url)]);
-    $t = mt_rand(5,20);
-    sleep($t);
-    
-    echo '<script language=JavaScript> location.replace(location.href);</script>';
-    
-//    echo str_repeat(' ', 1024);
-//    echo $i.'-'.date('H:i:s').'<br>';
-//    ob_flush();//冲刷出（送出）输出缓冲区中的内容
-//    flush();//刷新输出缓冲
+
+if(strtoupper(substr(PHP_OS,0,3))!=='WIN'){    
+    $is_linux = true;
+}else{
+    $is_linux = false;
 }
-//ob_end_flush();//冲刷出（送出）输出缓冲区内容并关闭缓冲 销毁缓冲区
+
+
+$i = 2;
+while($i){
+    $pid = pcntl_fork();
+    if ($pid == -1) {
+        die('could not fork');
+    } else if ($pid) {
+        
+    } else {
+        execf(10);
+    }
+    $i--;
+}
+
+
+function execf($n = 10){
+    for($i = 0; $i < $n; $i++){
+        $re = doCurlGetRequest('', []);
+        //$t = mt_rand(5,20);
+        //sleep($t);
+
+        //echo str_repeat(' ', 1024);
+        //echo $i.'-'.date('H:i:s').'<br>';
+    }
+}
 
 /**
  * 封闭curl的调用接口，get的请求方式。
@@ -52,8 +73,7 @@ function doCurlGetRequest($url,$requestString = '',$timeout = 15){
     curl_setopt($con, CURLOPT_HTTPHEADER, array("X-FORWARDED-FOR:$ip", "CLIENT-IP:$ip")); //构造IP
     curl_setopt($con, CURLOPT_USERAGENT, get_rand_agent()); //模拟常用浏览器的useragent
     curl_setopt ($con,CURLOPT_REFERER,$url);
-    
-    
+
     curl_setopt($con, CURLOPT_TIMEOUT, (int)$timeout);//允许 cURL 函数执行的最长秒数。
     $output = curl_exec($con);
     curl_close($con);
@@ -95,19 +115,19 @@ function get_rand_agent(){
         "Avant"=>"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Avant Browser)",
         "Green Browser"=>"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)",
         //移动端口
-//        "safari iOS 4.33 – iPhone"=>"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5",
-//        "safari iOS 4.33 – iPod Touch"=>"Mozilla/5.0 (iPod; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5",
-//        "safari iOS 4.33 – iPad"=>"Mozilla/5.0 (iPad; U; CPU OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5",
-//        "Android N1"=>"Mozilla/5.0 (Linux; U; Android 2.3.7; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
-//        "Android QQ浏览器 For android"=>"MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 2.3.7; zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
-//        "Android Opera Mobile"=>"Opera/9.80 (Android 2.3.4; Linux; Opera Mobi/build-1107180945; U; en-GB) Presto/2.8.149 Version/11.10",
-//        "Android Pad Moto Xoom"=>"Mozilla/5.0 (Linux; U; Android 3.0; en-us; Xoom Build/HRI39) AppleWebKit/534.13 (KHTML, like Gecko) Version/4.0 Safari/534.13",
-//        "BlackBerry"=>"Mozilla/5.0 (BlackBerry; U; BlackBerry 9800; en) AppleWebKit/534.1+ (KHTML, like Gecko) Version/6.0.0.337 Mobile Safari/534.1+",
-//        "WebOS HP Touchpad"=>"Mozilla/5.0 (hp-tablet; Linux; hpwOS/3.0.0; U; en-US) AppleWebKit/534.6 (KHTML, like Gecko) wOSBrowser/233.70 Safari/534.6 TouchPad/1.0",
-//        "UC标准"=>"NOKIA5700/ UCWEB7.0.2.37/28/999",
-//        "UCOpenwave"=>"Openwave/ UCWEB7.0.2.37/28/999",
-//        "UC Opera"=>"Mozilla/4.0 (compatible; MSIE 6.0; ) Opera/UCWEB7.0.2.37/28/999",
-//        "微信内置浏览器"=>"Mozilla/5.0 (Linux; Android 6.0; 1503-M02 Build/MRA58K) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile MQQBrowser/6.2 TBS/036558 Safari/537.36 MicroMessenger/6.3.25.861 NetType/WIFI Language/zh_CN",
+        "safari iOS 4.33 – iPhone"=>"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5",
+        "safari iOS 4.33 – iPod Touch"=>"Mozilla/5.0 (iPod; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5",
+        "safari iOS 4.33 – iPad"=>"Mozilla/5.0 (iPad; U; CPU OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5",
+        "Android N1"=>"Mozilla/5.0 (Linux; U; Android 2.3.7; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
+        "Android QQ浏览器 For android"=>"MQQBrowser/26 Mozilla/5.0 (Linux; U; Android 2.3.7; zh-cn; MB200 Build/GRJ22; CyanogenMod-7) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
+        "Android Opera Mobile"=>"Opera/9.80 (Android 2.3.4; Linux; Opera Mobi/build-1107180945; U; en-GB) Presto/2.8.149 Version/11.10",
+        "Android Pad Moto Xoom"=>"Mozilla/5.0 (Linux; U; Android 3.0; en-us; Xoom Build/HRI39) AppleWebKit/534.13 (KHTML, like Gecko) Version/4.0 Safari/534.13",
+        "BlackBerry"=>"Mozilla/5.0 (BlackBerry; U; BlackBerry 9800; en) AppleWebKit/534.1+ (KHTML, like Gecko) Version/6.0.0.337 Mobile Safari/534.1+",
+        "WebOS HP Touchpad"=>"Mozilla/5.0 (hp-tablet; Linux; hpwOS/3.0.0; U; en-US) AppleWebKit/534.6 (KHTML, like Gecko) wOSBrowser/233.70 Safari/534.6 TouchPad/1.0",
+        "UC标准"=>"NOKIA5700/ UCWEB7.0.2.37/28/999",
+        "UCOpenwave"=>"Openwave/ UCWEB7.0.2.37/28/999",
+        "UC Opera"=>"Mozilla/4.0 (compatible; MSIE 6.0; ) Opera/UCWEB7.0.2.37/28/999",
+        "微信内置浏览器"=>"Mozilla/5.0 (Linux; Android 6.0; 1503-M02 Build/MRA58K) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile MQQBrowser/6.2 TBS/036558 Safari/537.36 MicroMessenger/6.3.25.861 NetType/WIFI Language/zh_CN",
     ];
     return $agentarry[array_rand($agentarry)];
 }

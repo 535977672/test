@@ -1,0 +1,45 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/> 
+    <title>header</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="jquery.base64.js"></script>
+</head>
+
+<body>
+    <div id="keep"></div>
+    
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var url = '';
+            
+            url = 'http://test.test.com/web/headertest.php';
+            $.base64.utf8encode = true;
+            $.ajax({
+                type:"GET",
+                dataType:"json",
+                url:url,
+                headers: {
+                    contentType: 'application/x-www-form-urlencoded',
+                    //rrrr: encodeURIComponent('erwr ewr+332432+fdfff风高不VB不能s'),
+                    rrrr: $.base64.encode('erwr  ewr+332432+fdfff风高不VB不能s')
+                },
+                success:function(re){
+                    console.log(11);
+                    console.log(re);
+                    
+                },
+                error:function(re){
+                    console.log(22);
+                    console.log(re.statusText);
+                    
+                }
+            });
+
+        });
+        
+	</script>
+</body>    
+</html>

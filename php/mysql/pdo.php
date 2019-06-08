@@ -37,10 +37,10 @@ function __autoload($classname) {
 //如果你需要很经常地计算结果，例如基于来自很多行的信息的计数，引入一个新表并实时更新计数器可能更好一些。...
 
 
+$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password,array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
 
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password,array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
-
+    
     $conn->beginTransaction();
 
     //使用命名（:name）参数来准备SQL语句
@@ -68,5 +68,6 @@ try {
     
     $conn->commit();
 }catch(PDOException $e){
+    $conn->rollBack();
     echo $e->getMessage();
 }
