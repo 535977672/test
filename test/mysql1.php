@@ -74,4 +74,58 @@ class Ct2
             //echo $i.'-'.date('H:i:s').PHP_EOL;
         }
     }
+	
+	public function index2()
+    {  
+		$this->table = 'tselect2';
+        for($i = 0; $i < 1; $i++){
+            $pid = pcntl_fork();
+            if (!$pid) {
+                $this->insertData2(2,3);
+            }
+        }
+    }
+	
+	public function insertData2($n = 1, $jn = 1){
+		try{
+		
+			$conn = new PDO("mysql:host=$this->host:$this->port;dbname=$this->db", $this->root, $this->pwd, $this->options);
+
+			for($i = 0; $i < $n; $n--){
+				if(!isset($sql) || empty($sql)){
+					$sql = 'INSERT INTO '.$this->table.' (`p1` , `p2`, `p3`, `p4`, `p5`, `p6`, `p7`, `p8`, `p9`, `p10`, `p11`, `p12`, `p13`, `p14`, `p15`, `p16`, `p17`, `p18`, `p19`, `p20`) VALUES ';
+					for($j = 0; $j < $jn; $j++){
+						$s = $this->getRandStr(10);
+						$sql .= "('" . 
+							$this->getRandStr(10) . "', '" . 
+							$this->getRandStr(10, 3) . "', '" .
+							$this->getRandStr(5) . "', '" .
+							$this->getRandStr(2, 3) . "', '" .
+							$this->getRandStr(2, 3) . "', '" .
+							$this->getRandStr(10) . "', '" .
+							$this->getRandStr(10) . "', '" .
+							$this->getRandStr(10) . "', '" .
+							$this->getRandStr(10) . "', '" .
+							$this->getRandStr(10) . "', '" .
+							$s . "', '" .
+							$s . "', '" .
+							$s . "', '" .
+							$s . "', '" .
+							$s . "', '" .
+							$s . "', '" .
+							$s . "', '" .
+							$s . "', '" .
+							$s . "', '" .
+							time() . "') , ";
+					}
+					$sql = substr($sql, 0, -3);
+				}
+				$stmt = $conn->prepare($sql);
+				$stmt->execute();
+			}
+		}catch (Exception $e){
+			sleep(5);
+			$this->insertData2($n,$jn);
+		}
+    }
 }
