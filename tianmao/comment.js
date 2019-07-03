@@ -1,10 +1,20 @@
-//抓取评论
-//<script src='https://code.jquery.com/jquery-3.1.1.js'></script>
+
+function sleep(numberMillis) {  
+    var now = new Date();  
+    var exitTime = now.getTime() + numberMillis;  
+    while (true) {  
+        now = new Date();  
+        if (now.getTime() > exitTime)  
+            return;  
+    }  
+} 
 
 //公共引入
 var script = document.createElement('script');
 script.src = "https://code.jquery.com/jquery-3.1.1.js";
 document.getElementsByTagName('head')[0].appendChild(script);
+sleep(3000);
+
 
 //公共引入
 var saveAs = saveAs || (function(view) { 
@@ -173,39 +183,124 @@ if (typeof module !== "undefined" && module.exports) {
  }); 
 }
 
+function saveMe(data, name){
+    var newData = [];
+    $.each(data, function(i, v){
+        var temp = '';
+        $.each(v, function(j, k){
+            if(j != v.length-1)
+                temp = temp+k+'\t';
+            else
+                temp = temp+k+'\r\n';
+        });
+        newData.push(temp);
+    });
+    var file = new File(newData, name, { type: "text/plain;charset=utf-8" });
+    saveAs(file);
+}
+
+function htmlspecialchars(str, type = 0)  
+{  
+    str = str.replace(/&/g, '&amp;');
+    str = str.replace(/</g, '&lt;');
+    str = str.replace(/>/g, '&gt;');
+    str = str.replace(/"/g, '&quot;');
+    if(type !== 0){
+        str = str.replace(/'/g, '&#039;');
+    }
+    return str;
+}
+
+function htmlspecialchars_decode(str, type = 0){           
+    str = str.replace(/&amp;/g, '&'); 
+    str = str.replace(/&lt;/g, '<');
+    str = str.replace(/&gt;/g, '>');
+    str = str.replace(/&quot;/g, '"');
+    if(type !== 0){
+        str = str.replace(/&#039;/g, "'");  
+    }
+    return str;  
+}
 
 
-
-var ooo = $('.rate-grid .tm-rate-content');
-var data = [];
-$.each(ooo, function(i, v){
-    var id = '111';
-    var content = $(v).find('.tm-rate-fulltxt');
-    $.each(content, function(j, k){
-        var ddd = "''\t"+id+'\t';
-        var kk = $(k);
-        var con = kk.text();
+var id = '111';
+comment(id);
+//评论
+function comment(id){
+    var ooo = $('.rate-grid .tm-col-master .tm-rate-content');
+    var data = [];
+    $.each(ooo, function(i, v){
+        var con = $(v).find('.tm-rate-fulltxt').text();
         if(con !== '此用户没有填写评论!'){
             con = con.replace(/ /g, '');
-            ddd = ddd+con+'\r\n';
-            data.push(ddd);
+            var thumb = $(v).find('.tm-m-photos-thumb li');
+            var thumbs = [];
+            if(thumb.length>0){
+                $.each(thumb, function(j, k){
+                    var thumbss = {};
+                    var o = $(k);
+                    thumbss.osrc = o.attr('data-src');
+                    thumbss.tsrc = o.children('img').attr('src');
+                    thumbs.push(thumbss);
+                });
+            }
+            thumbs = JSON.stringify(thumbs);
+            thumbs = thumbs.replace(/\//g, '\\/');
+            
+            var re  = [
+                "''",
+                id,
+                con,
+                thumbs
+            ];
+            data.push(re);
         }
     });
-});
-var file = new File(data, "t.txt", { type: "text/plain;charset=utf-8" });
-saveAs(file);
+    saveMe(data, 't.txt');
+}
 
 
-//var ooo = document.getElementsByClassName('tm-rate-fulltxt');
-//var data = [];
-//for(var i = 0; i<ooo.length; i++){
-//    var id = '111';
-//    var ddd = "''\t"+id+'\t';
-//    var con = ooo[i].innerText;
-//    if(con !== '此用户没有填写评论!'){
-//        con = con.replace(/ /g, '');
-//        data.push(ddd+con+'\r\n');
-//    }  
-//}
-//var file = new File(data, "t.txt", { type: "text/plain;charset=utf-8" });
-//saveAs(file);
+
+var id = '111';
+detail(id);
+function detail(id){
+    var ddd = "''\t"+id+'\t';
+    var data = [];
+    var content = "''";
+    var attr = [];
+    var brand = "''";
+    
+    var attributes = $('.attributes-list');
+    con = $('.content');
+    if(con.length){
+        //过滤a标签
+        con.find('a').remove();
+        con.find('script').remove();
+        content = con.html();
+        content = htmlspecialchars(content);
+    }
+    if(attributes.length){
+        if($('#J_BrandAttr b').length)
+            brand = $('#J_BrandAttr b').text();
+        var list = $('#J_AttrUL li');
+        if(list.length){
+            $.each(list, function(j, k){
+                attr.push($(k).text());
+            });
+        }
+    }
+    
+    attr = JSON.stringify(attr);
+    attr = attr.replace(/\//g, '\\/');
+    var re  = [
+        "''",
+        id,
+        brand,
+        content,
+        attr
+    ];
+    data.push(re);
+    saveMe(data, 't.txt');
+}
+
+
