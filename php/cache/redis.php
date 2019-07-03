@@ -24,11 +24,17 @@ function redis(){
     //$handle->redisSet();
     //$handle->redisSortedSet();
     
-    $handle->redisPub();
-    //$handle->redisTransaction();
+    //$handle->redisPub();
+    
+    //事务
+    $handle->redisTransaction();
+    
     //$handle->redisConnection();
 
     //$handle->redisServer();
+    
+    //管道
+    //$handle->redisPipeline();
 }
     
     
@@ -643,7 +649,7 @@ class RediesTest{
             return false;
         }
         $redis->auth('1234567890');
-        $redis->flushall();
+        //$redis->flushall();
          
         //1. watch 监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断。总是返回 OK 。
         //2. unwatch 取消 WATCH 命令对所有 key 的监视。如果在执行 WATCH 命令之后， EXEC 命令或 DISCARD 命令先被执行了的话，那么就不需要再执行 UNWATCH 了。总是返回 OK 。
@@ -656,10 +662,10 @@ class RediesTest{
         
         if(empty($_GET['sb'])){
             $redis->watch('k1');//监视 k1
-            $redis->set('k1',13); //k1保存，事务被打断
+            //$redis->set('k1',13); //k1保存，事务被打断
             //$redis->unwatch(); //取消监视
             $redis->multi();//开启事务
-
+            var_dump($redis->set('k1',13));
             $redis->set('k1',1);
             $redis->set('k2',2);
             sleep(1);
@@ -782,7 +788,38 @@ class RediesTest{
                 [vm_enabled] => 0
             )
          */
-    }     
+    }   
+    
+    /**
+     * 管道
+     */
+    function redisPipeline(){
+        $redis = new Redis();
+        $connect = $redis->connect('127.0.0.1',6379);
+        if ( !$connect ){
+            return false;
+        }
+        $redis->auth('1234567890');
+        
+        $redis->select(10);
+        $redis->flushDB();
+        
+        set_time_limit(0);
+        
+        $pipe = $redis->multi(Redis::PIPELINE); //1.3680789470673
+        //$pipe = $redis->multi(); //29.154567956924
+        $t1 = microtime(true);
+        for ($i = 0; $i <  100000; $i++) {   
+            $pipe->set("key::$i", str_pad($i, 4, '0', 0));   
+            $pipe->get("key::$i");   
+        }   
+      
+        $pipe->exec(); 
+ 
+        echo microtime(true)-$t1 . PHP_EOL;
+        
+        $redis->select(0);
+    }
 }
 
 /*
