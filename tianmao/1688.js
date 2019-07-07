@@ -32,7 +32,7 @@ function detail(id){
         var skip = 0;
         var temp = '';
         $.each(attributes, function(j, k){
-            if($(k).text() === '建议零售价'){
+            if($(k).text() === '建议零售价' || $(k).text() === '货号'){
                 skip = 1;
             }else if(skip !== 1){
                 if(j%2 === 0){
@@ -98,7 +98,10 @@ function detail(id){
         var objSku = objPrice.find('.obj-sku .obj-content tr');
         $.each(objSku, function(i, v){
             var temp2 = {};
-            temp2.name = $(v).find('.name span').text();
+            if($(v).find('.name span img').length>0)
+                temp2.name = $(v).find('.name span img').attr('src');
+            else 
+                temp2.name = $(v).find('.name span').text();
             temp2.price = $(v).find('.price .value').text();
             temp2.count = $(v).find('.count .value').text();
             sku.push(temp2);
@@ -113,7 +116,7 @@ function detail(id){
     //title
     title = $('#mod-detail-title .d-title').text().replace(/[\t\r\n]/g, '');
     //limit
-    limit = $('.offerdetail_ditto_price .d-content .amount .value').text();
+    limit = $('.offerdetail_ditto_price .d-content .amount .value:first').text();
     
     var addr = $('.offerdetail_ditto_postage .delivery-addr').text().replace(/[\t\r\n]/g, '');
     var cost = $('.offerdetail_ditto_postage .obj-carriage .cost-entries .value').text();
@@ -139,7 +142,7 @@ function detail(id){
 }
 
 //load data infile 'C:/Users/Administrator/Desktop/t.txt' into table `test`;
-var id = '11121';
+var id = '324324';
 var d1 = detail(id);
 
 setlocalData('detail2_'+id,d1);
