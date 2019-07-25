@@ -83,7 +83,7 @@ function detail(id){
 
 
 //load data infile 'C:/Users/Administrator/Desktop/t.txt' into table `test`;
-//load data infile '/var/lib/mysql-files/t.txt' into table `test character set utf8;`
+//load data infile '/var/lib/mysql-files/t.txt' into table `test` character set utf8;
 //因为UTF-8编码有可能是两个，三个，四个字节.Emoji表情是4个字节，而MySQL的utf8编码最多3个字节，所以数据插不进去。
 //将Mysql的编码从utf8转换成utf8mb4  
 //前端JS校验过滤掉emoji表情 str.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, "");
