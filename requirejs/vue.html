@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>requireJs+Vue</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            #app,body{background-color: #ccc}
+            #app>div{margin: 5px 0px; background-color: white; border-radius: 2px;}
+            [v-cloak] { display: none; } <!--避免渲染前显示-->
+        </style>
+    </head>
+    <body>
+        <div id="app" v-cloak>
+            <div id="app-ver">
+                <div id="app-text">TEST基础属性 {{ message }}</div>
+                <div id="app-text-jisuan">计算属性 {{ jisuan_message }}</div>
+                <div id="app-text-jisuan-1">计算属性-侦听属性 {{ jisuan_message_1 }}</div>
+                <button v-on:click="jisuan_message_1_fun">侦听属性</button>
+            </div>
+            
+            <div id="app-class-style">
+                <div id="app-text" :class="classObj" :style="styleObj">Class 与 Style 绑定</div>
+            </div>
+            
+            <div id="app-if">
+                <span v-if="if_SEE">IF 语句</span>
+                <span v-else="if_SEE">IF else 语句</span>
+                <button v-on:click="if_SEE_change">点击</button><!--缩写 @click="if_SEE_change" -->
+            </div>
+            
+            <div id="app-show">
+                <span v-show="display_show">display-show 语句</span>
+                <button v-on:click="display_show_change">点击</button><!--缩写 @click="if_SEE_change" -->
+            </div>
+            
+            
+            <div id="app-html">
+                <div v-html="rawHtml"></div>
+            </div>
+            
+            <!--v-bind 指令可以用于响应式地更新 HTML 特性-->
+            <div id="app-attr">
+                <div v-bind:id="app_attr_id">绑定ID</div><!--缩写 :id="if_SEE_change" -->
+                <div v-bind:disabled="app_attr_disabled">绑定disabled</div>
+                <span v-bind:title="attr_title">鼠标在我这悬停看看</span>
+            </div>
+            
+            <!--表单
+            v-model 指令在表单 <input>、<textarea> 及 <select> 元素上创建双向数据绑定-->
+            <div id="app-form">
+                <input v-model="form.form_text" placeholder="form_text"><span>{{ form.form_text }}<br>
+                    
+                <textarea v-model="form.form_textarea" placeholder="form_textarea"></textarea>{{ form.form_textarea }}<br>
+                
+                <input type="checkbox" id="jack" value="1" v-model="form.checkedNames">
+                <label for="jack">Jack</label>
+                <input type="checkbox" id="john" value="2" v-model="form.checkedNames">
+                <label for="john">John</label>
+                <input type="checkbox" id="mike" value="3" v-model="form.checkedNames">
+                <label for="mike">Mike</label>
+                <span>{{ form.checkedNames }}</span><br>
+                
+                <input type="radio" id="one" value="1" v-model="form.picked">
+                <label for="one">One</label>
+                <input type="radio" id="two" value="2" v-model="form.picked">
+                <label for="two">Two</label>
+                <br> <span>{{ form.picked }}</span> <br>
+                
+                <select v-model="form.selected">
+                    <option disabled value="">请选择</option>
+                    <option value="3">A</option>
+                    <option value="1">B</option>
+                    <option value="2">C</option>
+                </select>
+                <span>Selected: {{ form.selected }}</span><br>
+              
+                <select v-model="form.selected2">
+                    <option disabled value="">请选择</option>
+                    <option v-for="option in options" v-bind:value="option.value">
+                        {{ option.text }}
+                    </option>
+                </select>
+                <span>Selected: {{ form.selected2 }}</span><br>
+                <button v-on:click="form_add">提交</button>
+            </div>
+            
+            
+            
+            <!--v-once 指令，你也能执行一次性地插值-->
+            <!--v-on 指令，它用于监听 DOM 事件-->
+            <div id="app-for-once" v-once>
+                <p v-for="(f, index) in for_data">
+                    {{ index }} - {{ f.name }} - {{ f.code }}
+                </p>
+                <button v-on:click="add_for">一次性地插值</button>
+            </div>
+            
+            
+            <div id="app-for">
+                <p v-for="f in for_data">
+                    {{ f.name }} - {{ f.code }}
+                </p>
+                <button v-on:click="add_for">点击添加</button>
+            </div>
+            
+            <div id="app-axios">
+                <button v-on:click="axios_get">GET</button>
+                <button v-on:click="axios_post">POST</button>
+            </div>
+            
+            
+        </div>
+        <script src="/requirejs/js/requirejs.js"></script>
+        <script>
+            require.config({
+                baseUrl: "/requirejs/js",
+                paths: {
+                    "Vue": 'vuejs/Vue-2.6.10',
+                    "axios": 'vuejs/axios-0.19.0'
+                }
+            });
+        </script>
+        
+        <script>
+            require(['Vue', 'axios'], function (Vue, axios){
+                //axios在请求或响应被 then 或 catch 处理前拦截它们。
+                // 添加请求拦截器
+                axios.interceptors.request.use(function (config) {
+                    // 在发送请求之前做些什么
+                    config.timeout = 30000;
+                    console.log(config);
+                    return config;
+                }, function (error) {
+                    // 对请求错误做些什么
+                    return Promise.reject(error);
+                });
+
+                // 添加响应拦截器
+                axios.interceptors.response.use(function (response) {
+                    // 对响应数据做点什么
+                    console.log(response);
+                    return response;
+                }, function (error) {
+                    // 对响应错误做点什么
+                    //return ; //可以跳到 then
+                    return Promise.reject(error); //可以跳到 catch
+                });
+                  
+                var data1 = [
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'wergh', 'code': '官方'},
+                    {'name': 'asdfgh', 'code': '份他'},
+                    {'name': '2345643', 'code': '孤鸿寡鹄'},
+                    {'name': '2345tgf', 'code': '苟富贵'},
+                ]
+                ,data2 = [];
+                
+                var app = new Vue({
+                    el: '#app',
+                    //属性
+                    data: {
+                        message: 'Hello Vue!' + new Date().toLocaleString(),
+                        attr_title: '我是title属性',
+                        
+                        if_SEE: true,
+                        for_data: data1,
+                        rawHtml: '<p style="color:red">html输出</p>',
+                        app_attr_id: 123,
+                        app_attr_disabled: true, //null、undefined 或 false
+                        jisuan_message_1_data: 123,
+                        display_show: true,
+                        
+                        //Class 与 Style 绑定
+                        classObj: {
+                            main: true,
+                            class2: false,
+                            class3: true,
+                        },
+                        styleObj: {
+                            'color': 'red',
+                            'text-align': 'center',
+                        },
+                        
+                        //表单
+                        form: {
+                            form_text: 1234,
+                            form_textarea: 1234567890,
+                            checkedNames:['1'],
+                            picked: 1,
+                            selected: '',
+                            selected2: '',
+                        },
+                        options:[
+                            {'value':1, 'text':'A'},
+                            {'value':2, 'text':'B'},
+                            {'value':3, 'text':'C'},
+                        ]
+                    },
+                    //计算属性
+                    computed: {
+                        jisuan_message: function () {
+                          return Date.now();
+                        },
+                        jisuan_message_1: function () {
+                          return this.jisuan_message_1_data; //this.jisuan_message_1_data变化自动更新
+                        },
+                    },
+                    methods: {
+                        add_for: function () {
+                            this.for_data = this.for_data.concat(data1);
+                        },
+                        if_SEE_change:function () {
+                            this.if_SEE = !this.if_SEE;
+                        },
+                        jisuan_message_1_fun:function () {
+                            this.jisuan_message_1_data = this.jisuan_message_1_data+123;
+                        },
+                        display_show_change: function () {
+                            this.display_show = !this.display_show;
+                        },
+                        form_add: function () {
+                            console.log(this.form);
+                        },
+                        
+                        //axios
+                        axios_get: function () {
+                            axios.get('/requirejs/vue.php', {
+                                params: {
+                                  id: 12345
+                                }
+                            })
+                            .then(function (response) {
+                                console.log(response);
+                                app.for_data = app.for_data.concat(response.data.data);
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                        },
+                        axios_post: function () {
+                            axios.post('/requirejs/vue.php', {
+                                  id: 12345,
+                            })
+                            .then(function (response) {
+                                console.log(response);
+                                app.for_data = app.for_data.concat(response.data.data);
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                        },
+                    },
+                    // created 钩子在一个实例被创建之后
+                    created: function () {
+                        console.log(this.for_data);
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>requireJs+Vue+bscroll+axios</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            html,body{height: 100%; margin: 0px; overflow: hidden;}
+            #app,body{background-color: #ccc}
+            #app>div{margin: 5px 0px; background-color: white; border-radius: 2px;}
+            [v-cloak] { display: none; } <!--避免渲染前显示-->
+        </style>
+    </head>
+    <body class="wrapper">
+        <div class="content" id="app" v-cloak>
+            <div id="app-for">
+                <p v-for="f in for_data">
+                    {{ f.name }} - {{ f.code }}
+                </p>
+                <button v-on:click="axios_post">点击添加</button>
+            </div>
+            
+            
+        </div>
+        <script src="/requirejs/js/requirejs.js"></script>
+        <script>
+            require.config({
+                baseUrl: "/requirejs/js",
+                paths: {
+                    "Vue": 'vuejs/Vue-2.6.10',
+                    "axios": 'vuejs/axios-0.19.0',
+                    "BScroll": 'vuejs/better-scroll-1.15.2'
+                }
+            });
+        </script>
+        
+        <script>
+            require(['Vue', 'axios', 'BScroll'], function (Vue, axios, BScroll){
+                var data1 = [
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                    {'name': 'sdfdsdsf', 'code': '热尔'},
+                    {'name': '2345', 'code': '覆盖'},
+                ];
+                
+
+                var axios_post = function () {
+                    axios.post('/requirejs/vue.php', {
+                          id: 12345,
+                    })
+                    .then(function (response) {
+                        console.log(response);
+                        app.for_data = app.for_data.concat(response.data.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                };
+                
+                var app = new Vue({
+                    el: '#app',
+                    //属性
+                    data: {
+                        for_data: data1
+                    },
+                    methods: {
+                        axios_post: function () {
+                            axios.post('/requirejs/vue.php', {
+                                  id: 12345,
+                            })
+                            .then(function (response) {
+                                console.log(response);
+                                app.for_data = app.for_data.concat(response.data.data);
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                        }
+                    },
+                    // created 钩子在一个实例被创建之后
+                    created: function () {
+                        console.log(this.for_data);
+                    }
+                });
+                
+                var loading = false;
+                var scroll = new BScroll(document.querySelector('.wrapper'),{
+                    scrollY: true,
+                    click: true,
+                    scrollbar: true,
+                    preventDefault: false,
+                    mouseWheel: true,//开启鼠标滚轮
+                    pullDownRefresh: true,//开启下拉加载
+                    pullUpLoad: {
+                        threshold: 50
+                    },//开启上拉加载
+                });
+                scroll.on('scroll', function (obj) {
+                    //console.log(obj);
+                });
+                scroll.on('pullingUp',function(){
+                    if (loading) return;
+                    loading = true;
+                    console.log(111);
+                    axios_post();
+                    scroll.refresh();
+                    scroll.finishPullUp();//法告诉 better-scroll 数据已加载
+                    loading = false;
+                });
+                scroll.on('pullingDown',function(){
+                    if (loading) return;
+                    loading = true;
+                    console.log(222);
+                    axios_post();
+                    scroll.refresh();
+                    scroll.finishPullDown();//法告诉 better-scroll 数据已加载
+                    loading = false;
+                });
+            });
+        </script>
+    </body>
+</html>
