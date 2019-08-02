@@ -104,6 +104,20 @@ and open the template in the editor.
                     {'name': '2345', 'code': '覆盖'},
                 ];
                 
+
+                var axios_post = function () {
+                    axios.post('/requirejs/vue.php', {
+                          id: 12345,
+                    })
+                    .then(function (response) {
+                        console.log(response);
+                        app.for_data = app.for_data.concat(response.data.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                };
+                
                 var app = new Vue({
                     el: '#app',
                     //属性
@@ -122,69 +136,59 @@ and open the template in the editor.
                             .catch(function (error) {
                                 console.log(error);
                             });
-                        },
-                        
-                        bscrollInit: function () {
-                            this.finished = 1;
-                            this.loading = false;
-                            this.scroll = new BScroll(document.querySelector('.wrapper'),{
-                                scrollY: true,
-                                click: true,
-                                //scrollbar: true,
-                                preventDefault: true,
-                                mouseWheel: true,//开启鼠标滚轮
-                                pullDownRefresh: true,//开启下拉加载
-                                pullUpLoad: true,//开启上拉加载
-                            });
-                            this.scroll.on('scroll', function (obj) {
-                                //console.log(obj);
-                            });
-                            this.scroll.on('pullingUp',this.myPullingUp);
-                            this.scroll.on('pullingDown',this.myPullingDown);
-                        },
-                        
-                        myPullingUp: function(){
-                            if (this.loading) return;
-                            this.loading = true;
-                            console.log(111);
-                            this.axios_post();
-                            this.scroll.finishPullUp();//法告诉 better-scroll 数据已加载
-                            setTimeout(() => {
-                                this.scroll.refresh();//直接使用可能会导致上拉加载失效
-                            }, 500);
-                            this.loading = false;
-                            if(this.finished > 10) {
-                                this.scroll.off('pullingUp',this.myPullingUp);
-                            }
-                            this.finished++;
-                        },
-                        
-                        myPullingDown: function(){
-                            if (this.loading) return;
-                            this.loading = true;
-                            console.log(222);
-                            this.axios_post();
-                            this.scroll.finishPullDown();//法告诉 better-scroll 数据已加载
-                            setTimeout(() => {
-                                this.scroll.refresh();
-                            }, 500);
-                            this.loading = false;
                         }
                     },
-                    //在实例创建完成后被立即调用。
-                    //在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法的运算，watch/event 事件回调。
-                    //然而，挂载阶段还没开始，$el 属性目前不可见。
+                    // created 钩子在一个实例被创建之后
                     created: function () {
                         console.log(this.for_data);
-                        //this.bscrollInit(); //无效
-                    },
-                    //el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用该钩子。如果 root 实例挂载了一个文档内元素，当 mounted 被调用时 vm.$el 也在文档内。
-                    //如果你希望等到整个视图都渲染完毕，可以用 vm.$nextTick 替换掉 mounted
-                    //mounted: function () {this.$nextTick(function () {console.log('11');}}
-                    mounted:function(){
-                        this.bscrollInit();
                     }
                 });
+                
+                var finished = 1;
+                var loading = false;
+                var scroll = new BScroll(document.querySelector('.wrapper'),{
+                    scrollY: true,
+                    click: true,
+                    //scrollbar: true,
+                    preventDefault: true,
+                    mouseWheel: true,//开启鼠标滚轮
+                    pullDownRefresh: true,//开启下拉加载
+                    pullUpLoad: true,//开启上拉加载
+                });
+                scroll.on('scroll', function (obj) {
+                    //console.log(obj);
+                });
+                
+                var myPullingUp = function(){
+                    if (loading) return;
+                    loading = true;
+                    console.log(111);
+                    axios_post();
+                    scroll.finishPullUp();//法告诉 better-scroll 数据已加载
+                    setTimeout(() => {
+                        scroll.refresh();//直接使用可能会导致上拉加载失效
+                    }, 500);
+                    loading = false;
+                    if(finished > 10) {
+                        scroll.off('pullingUp',myPullingUp);
+                    }
+                    finished++;
+                };
+                
+                var myPullingDown = function(){
+                    if (loading) return;
+                    loading = true;
+                    console.log(222);
+                    axios_post();
+                    scroll.finishPullDown();//法告诉 better-scroll 数据已加载
+                    setTimeout(() => {
+                        scroll.refresh();
+                    }, 500);
+                    loading = false;
+                };
+                
+                scroll.on('pullingUp',myPullingUp);
+                scroll.on('pullingDown',myPullingDown);
             });
         </script>
     </body>

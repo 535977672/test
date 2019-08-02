@@ -203,15 +203,6 @@ and open the template in the editor.
                             {'value':3, 'text':'C'},
                         ]
                     },
-                    //计算属性
-                    computed: {
-                        jisuan_message: function () {
-                          return Date.now();
-                        },
-                        jisuan_message_1: function () {
-                          return this.jisuan_message_1_data; //this.jisuan_message_1_data变化自动更新
-                        },
-                    },
                     methods: {
                         add_for: function () {
                             this.for_data = this.for_data.concat(data1);
