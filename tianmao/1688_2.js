@@ -29,7 +29,7 @@ function detail(id, BodyObj, url){console.log(BodyObj);
         });
         content = htmlspecialchars(content, 1);
     }
-    console.log(content);
+    //console.log(content);
     
     //attr
     var attributes = BodyObj.find('#mod-detail-attributes .obj-content td');

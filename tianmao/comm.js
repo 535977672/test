@@ -183,7 +183,7 @@ if (typeof module !== "undefined" && module.exports) {
  }); 
 }
 
-function saveMe(data, name){
+function saveMe(data, name, post = 0){
     var newData = [];
     $.each(data, function(i, v){
         var temp = '';
@@ -196,8 +196,14 @@ function saveMe(data, name){
         });
         newData.push(temp);
     });
-    var file = new File(newData, name, { type: "text/plain;charset=utf-8" });
-    saveAs(file);
+    if(!post){
+        var file = new File(newData, name, { type: "text/plain;charset=utf-8" });
+        saveAs(file);
+    }else{
+        $.post(name,{data: newData}, function(re){
+            console.log(re);
+        });
+    }
 }
 
 function htmlspecialchars(str, type = 0)  

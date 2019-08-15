@@ -83,6 +83,7 @@ function detail(id){
                 $.each(objSku, function(i, v){
                     var temp2 = {};
                     temp2.name = $(v).find('.name span').text();
+                    temp2.alt = '';
                     temp2.price = $(v).find('.price .value').text();
                     temp2.count = $(v).find('.count .value').text();
                     sku.push(temp2);
@@ -98,10 +99,13 @@ function detail(id){
         var objSku = objPrice.find('.obj-sku .obj-content tr');
         $.each(objSku, function(i, v){
             var temp2 = {};
-            if($(v).find('.name span img').length>0)
+            if($(v).find('.name span img').length>0){
                 temp2.name = $(v).find('.name span img').attr('src');
-            else 
+                temp2.alt = $(v).find('.name span img').attr('alt');
+            } else {
                 temp2.name = $(v).find('.name span').text();
+                temp2.alt = '';
+            }
             temp2.price = $(v).find('.price .value').text();
             temp2.count = $(v).find('.count .value').text();
             sku.push(temp2);
@@ -147,3 +151,5 @@ var d1 = detail(id);
 
 setlocalData('detail2_'+id,d1);
 //saveMe(getlocalData('detail2_'+id), 't.txt');
+
+//saveMe(getlocalData('detail2_'+id), 'http://test.test.com/tianmao/data.php', 1);
