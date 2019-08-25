@@ -19,6 +19,10 @@ function detail(id){
             var c = $(v);
             c.find('a').remove();
             c.find('script').remove();
+            c.find('img').removeAttr('height');
+            c.find('img').removeAttr('width');
+            c.find('img').removeAttr('style');
+            c.find('img').removeAttr('alt');
             content = content+'<p>'+c.html()+'</p>';
             content = content.replace(/[\t\r\n]/g, '');
         });
