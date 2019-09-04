@@ -260,7 +260,7 @@ function getlocalData(name){
 function setlocalData(name, value){
     var d = getlocalData(name);
     if(d){
-         var c = value.concat(d);
+         var c = d.concat(value);
     }else{
         var c = value;
     }
