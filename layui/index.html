@@ -1,0 +1,267 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/> 
+    <title>layui</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js" charset="utf-8"></script>
+</head>
+
+<body>
+    
+    
+    <table id="demo1" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+      <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+      <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+      <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+    </div>
+</script>
+    
+<script type="text/html" id="is_pid2">
+    {{#  if(d.pid < 1){ }}
+      <input type='checkbox' lay-skin='switch' lay-text='ON|OFF' name="is_pid2" lay-filter='switchSelected' table-index='"+row.LAY_TABLE_INDEX+"' class='checkboxIsSelected' value="{{d.id}}" checked>
+    {{#  } else { }}
+      <input type='checkbox' lay-skin='switch' lay-text='ON|OFF' name="is_pid2" lay-filter='switchSelected' table-index='"+row.LAY_TABLE_INDEX+"' class='checkboxIsSelected' value="{{d.id}}">
+    {{#  } }}
+</script>
+    
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
+    <!-- 这里同样支持 laytpl 语法，如： -->
+    {{#  if(d.pid > 0){ }}
+      <a class="layui-btn layui-btn-xs" lay-event="check">审核</a>
+    {{#  } }}
+</script>
+<script>
+layui.use(['layer', 'form', 'table'], function(){
+    var layer = layui.layer
+    ,form = layui.form
+    ,table = layui.table
+    ,$ = layui.$;
+  
+  
+    var tableIns = table.render({
+        elem: '#demo1'
+        ,id: 'myId'
+        ,height: 'full-50'
+        ,url: 'index.php' //数据接口
+        ,method: 'GET'
+        ,where: {type: 1} //其它参数。如：where: {token: 'sasasas', id: 123}
+        //,headers: {} //接口的请求头。如：headers: {token: 'sasasas'}
+        ,text: {
+            none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+        }
+        ,autoSort: false //禁用前端自动排序。 监听排序事件 
+        //初始排序
+        ,initSort: {
+            field: 'id' //排序字段，对应 cols 设定的各字段名
+            ,type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+        }
+        //,skin: 'line' //行边框风格
+        ,even: true //开启隔行背景
+        //,size: 'lg' //小尺寸的表格sm （小尺寸） lg
+        //返回数据格式化
+        ,parseData: function(res){ //res 即为原始返回的数据
+            return {
+                "code": res.status, //解析接口状态
+                "msg": res.message, //解析提示文本
+                "count": res.total, //解析数据长度
+                "data": res.data.item //解析数据列表
+            };
+        }
+        ,page: true //开启分页
+        ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+        ,defaultToolbar: ['filter', 'print', 'exports'] //头部工具栏右侧图标
+        ,totalRow: true //是否开启合计行区域
+        ,cols: [[ //表头
+            {type: 'numbers', title: '序号', fixed: 'left', totalRowText: '合计'}
+            ,{type: 'checkbox', width: 50, fixed: 'left'}
+            ,{field: 'id', title: 'ID', width:150, sort: true, totalRow: true, fixed: 'left'} //fixed:浮动  totalRow是否开启该列的自动合计功能  totalRowText用于显示自定义的合计文本
+            ,{field: 'name', title: '城市', width:200, style:'background-color: #009688; color: #fff;'}
+            ,{field: 'pid', title: '父ID 可编辑', width:200,totalRow: true, sort: true, edit:'text'}
+            ,{field: 'is_pid', title: '是否父ID', width:150, templet:function(row){
+                var html = "<input type='checkbox' lay-skin='switch' lay-text='ON|OFF' lay-filter='checkboxIsSelected' table-index='"+row.LAY_TABLE_INDEX+"' class='checkboxIsSelected' value='"+row.id+"' ";
+                if(row.pid < 1){
+                    html += " checked ";
+                }
+                html += ">";
+                return html;
+            }}
+            ,{field: 'is_pid2', title: '是否父ID', width:100, templet: '#is_pid2'}
+            ,{title: '操作', width:200, toolbar: '#barDemo'}
+        ]]
+        
+        //数据渲染完的回调
+        //无论是异步请求数据，还是直接赋值数据，都会触发该回调。你可以利用该回调做一些表格以外元素的渲染。
+        ,done: function(res, curr, count){
+            //如果是异步请求数据方式，res即为你接口返回的信息。
+            //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+            console.log(res);
+
+            //得到当前页码
+            console.log(curr); 
+
+            //得到数据总量
+            console.log(count);
+        }
+    });
+    
+    //头工具栏事件
+    table.on('toolbar(test)', function(obj){
+        var checkStatus = table.checkStatus(obj.config.id);
+        switch(obj.event){
+            case 'getCheckData':
+                var data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            break;
+            case 'getCheckLength':
+                var data = checkStatus.data;
+                layer.msg('选中了：'+ data.length + ' 个');
+            break;
+            case 'isAll':
+                layer.msg(checkStatus.isAll ? '全选': '未全选');
+            break;
+
+            //自定义头工具栏右侧图标 - 提示
+            case 'LAYTABLE_TIPS':
+                layer.alert('这是工具栏右侧自定义的一个图标按钮');
+            break;
+        };
+    });
+  
+    //监听工具条 
+    table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+        
+        console.log(data);
+        console.log(layEvent);
+        console.log(tr);
+        
+        
+        if(layEvent === 'detail'){ //查看
+            layer.msg('查看');
+            
+            var checkStatus = table.checkStatus('myId'); //idTest 即为基础参数 id 对应的值
+            console.log(checkStatus);
+            
+        } else if(layEvent === 'del'){ //删除
+            layer.confirm('真的删除行么', function(index){
+                
+              obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+              
+              layer.close(index);
+              //向服务端发送删除指令
+            });
+        } else if(layEvent === 'edit'){ //编辑
+            layer.msg('编辑');
+
+            //同步更新缓存对应的值
+            obj.update({
+                pid: 0
+                ,name: 'edit'
+            });
+            
+        } else if(layEvent === 'check'){
+            layer.msg('check');
+        } else if(layEvent === 'LAYTABLE_TIPS'){
+            layer.alert('Hi，头部工具栏扩展的右侧图标。');
+        }
+    });
+  
+  
+    //监听复选框选择
+    table.on('checkbox(test)', function(obj){
+        console.log(obj.checked); //当前是否选中状态
+        console.log(obj.data); //选中行的相关数据
+        console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
+    });
+    
+    //监听switch操作
+    form.on('switch(switchSelected)', function(obj){
+        console.log(obj.othis);
+        console.log(this);
+        layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+    });
+    
+    //监听锁定操作
+    //form.on('checkbox(lockDemo)', function(obj){
+    //    layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+    //});
+    
+    //单元格被编辑，且值发生改变时触发，回调函数返回一个object参数
+    table.on('edit(test)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+        console.log(obj.value); //得到修改后的值
+        console.log(obj.field); //当前编辑的字段名
+        console.log(obj.data); //所在行的所有相关数据  
+        
+        obj.update({
+            pid: 0  //没用
+            ,name: 'edit'
+        });
+        
+    });
+    
+    
+    //监听行单击事件
+    table.on('row(test)', function(obj){
+      console.log(obj.tr); //得到当前行元素对象
+      console.log(obj.data); //得到当前行数据
+      //obj.del(); //删除当前行
+      //obj.update(fields) //修改当前行数据
+    });
+ 
+    //监听行双击事件
+    table.on('rowDouble(test)', function(obj){
+      //obj 同上
+      console.log(obj);
+        //data
+        //del()
+        //tr
+        //update()
+    });
+    
+    
+    table.on('sort(test)', function(obj){ //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        console.log(obj.field); //当前排序的字段名
+        console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+        console.log(this); //当前排序的 th 对象
+
+        tableReload(obj);
+        //尽管我们的 table 自带排序功能，但并没有请求服务端。
+        //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+        //table.reload('idTest', {
+        //    initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+        //    ,where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+        //        field: obj.field //排序字段
+        //        ,order: obj.type //排序方式
+        //        ,type: 1
+        //    }
+        //});
+    });
+    
+    var tableReload = function(obj){
+        var where = {
+            type: 1
+        };
+        if(obj.type) where.order = obj.field + ' ' + obj.type;
+        table.reload('myId', {
+            initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+            ,where: where
+            ,page: {
+                curr: 1 //重新从第 1 页开始
+            }
+        });
+    };
+    
+});
+</script> 
+</body>    
+</html>
