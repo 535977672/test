@@ -16,7 +16,7 @@ $file = json_encode($file);
     </head>
     <body>
 
-        <div id="main" class="chart">66</div>
+        <div id="main" class="chart">开发中...</div>
         <script>
             var u = window.location.hash.substr(1);
             console.log(u);

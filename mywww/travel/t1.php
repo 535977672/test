@@ -146,18 +146,24 @@ $file = json_encode($file);
         </style>
     </head>
     <body>
-        <div class="nav"><div><span class="btn"><a href="travel.php?u=<?php echo $u; ?>">solo time</a></span></div><div></div><div></div></div>
+        <div class="nav"><div><span class="btn"><a href="/?u=<?php echo $u; ?>">solo</a></span></div><div></div><div></div></div>
         <div id="wrap">
             <div id="head"></div>
         </div>
         <script>
             var obj = $('#head');
-            addimg(gethtml(10));
+            var files = $.parseJSON('<?php echo $file ?>');
+            var len = files.length;
+            var num = 10;
+            var start = num;
+            var time = 35;
+            var over = 1;
+            addimg(gethtml(num));
+            if(num<len) setTimeout(intervals, 3000);
             
             function gethtml(n){
-                var files = getimg();
                 var html = '';
-                if(files.length>0){
+                if(len>0){
                     $.each(files, function(i, v){
                         if(n>0 && n<=i) return false;
                         html += '<div style="background:url('+v+') no-repeat;background-size:100%"></div>';
@@ -165,10 +171,15 @@ $file = json_encode($file);
                 }
                 return html;
             }
-            
-            function getimg(){
-                return $.parseJSON('<?php echo $file ?>');
-            };
+            function intervals(){
+                setInterval(overs,1000*time/num);
+            }
+            function overs(){console.log(11);
+                if(over>num) over = 1;
+                if(start>=len) start = 0;
+                $('#head div:nth-child('+over+')').css('background-image', 'url(\''+files[start]+'\')');
+                over++;start++;
+            }
             
             function addimg(html){
                obj.append(html);
