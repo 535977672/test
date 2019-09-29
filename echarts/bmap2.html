@@ -21,23 +21,23 @@
         <div id="main" class="chart"></div>
         <script>
             var data = [
-                {name: '张家界', value: 100},
-                {name: '仙女山', value: 100},
+                {name: '张家界', value: 150},
+                {name: '仙女山', value: 150},
                 {name: '磁器口', value: 100},
-                {name: '解放碑', value: 100},
+                {name: '解放碑', value: 150},
             ];
 
             var geoCoordMap = {
-                '张家界':[110.478697,29.361559],
-                '仙女山':[107.731354,29.481798],
-                '磁器口':[106.456217,29.587679],
-                '解放碑':[106.583541,29.563475],
+                '张家界':{d: [110.478697,29.361559], u: 'zjj'},
+                '仙女山':{d: [107.731354,29.481798], u: 'xns'},
+                '磁器口':{d: [106.456217,29.587679], u: 'cqk'},
+                '解放碑':{d: [106.583541,29.563475], u: 'jfb'}
             };
 
             var convertData = function (data) {
                 var res = [];
                 for (var i = 0; i < data.length; i++) {
-                    var geoCoord = geoCoordMap[data[i].name];
+                    var geoCoord = geoCoordMap[data[i].name].d;
                     if (geoCoord) {
                         res.push({
                             name: data[i].name,
@@ -53,7 +53,7 @@
             myChart.setOption({
                 bmap: {
                     center: [106.553352,29.556141],
-                    zoom: 6,
+                    zoom: 7,
                     roam: true,
                 },
                 series : [
@@ -68,7 +68,7 @@
                             normal: {
                                 formatter: '{b}',
                                 position: 'right',
-                                show: false
+                                show: true,
                             },
                             emphasis: {
                                 show: true
@@ -114,8 +114,7 @@
             });
             
             myChart.on('click', function (params) {
-                var name = params.name;
-                
+                var u = geoCoordMap[params.name].u;
             });
         </script>
     </body>
