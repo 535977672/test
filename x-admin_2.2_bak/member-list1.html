@@ -115,10 +115,18 @@
                 switch (obj.event) {
                 case 'getCheckData':
                     var data = checkStatus.data;
+                    
+                console.log(table);
+                console.log(obj);
+                console.log(obj.config.id);
                     layer.alert(JSON.stringify(data));
                     break;
                 case 'getCheckLength':
                     var data = checkStatus.data;
+                    
+                console.log(table);
+                console.log(obj);
+                console.log(obj.config.id);
                     layer.msg('选中了：' + data.length + ' 个');
                     break;
                 case 'isAll':

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
+        <title>优甜缘</title>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=O9A84ZEaoOYDrsgcewGeb4Vd1IHNudB7"></script>
+        <script src="./echarts/dist/echarts.min.js"></script>
+        <script src="./echarts/dist/extension/bmap.min.js"></script>
+        <style>
+            .chart {
+                height: 600px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="main" class="chart"></div>
+        <script>
+            var data = [
+                {name: '学府', value: 200},
+                {name: '解放碑', value: 150},
+                {name: '酉阳桃花源', value: 150},
+                {name: '西湖', value: 150},
+                {name: '梦幻王国', value: 150},
+                {name: '顾春公园', value: 150},
+                {name: '阿依河', value: 150},
+            ];
+
+            var geoCoordMap = {
+                '学府':{d: [106.343088,29.637935], u: 'dog'},
+                '解放碑':{d: [106.583541,29.563475], u: 'jfb'},
+                '酉阳桃花源':{d: [108.75758,28.86159], u: 'yythy'},
+                '西湖':{d: [120.149892,30.23688], u: 'xh'},
+                '梦幻王国':{d: [106.474102,29.471702], u: 'mhcb'},
+                '顾春公园':{d: [121.377279,31.345758], u: 'gcgy'},
+                '阿依河':{d: [108.12723,29.152496], u: 'ayh'},
+            };
+
+            var convertData = function (data) {
+                var res = [];
+                for (var i = 0; i < data.length; i++) {
+                    var geoCoord = geoCoordMap[data[i].name].d;
+                    if (geoCoord) {
+                        res.push({
+                            name: data[i].name,
+                            value: geoCoord.concat(data[i].value)
+                        });
+                    }
+                }
+                return res;
+            };
+
+            var myChart = echarts.init(document.getElementById('main'));
+
+            myChart.setOption({
+                bmap: {
+                    center: [106.553352,29.556141],
+                    zoom: 7,
+                    roam: true,
+                },
+                series : [
+                    {
+                        type: 'scatter',
+                        coordinateSystem: 'bmap',
+                        data: convertData(data),
+                        symbolSize: function (val) {
+                            return val[2] / 10;
+                        },
+                        label: {
+                            normal: {
+                                formatter: '{b}',
+                                position: 'right',
+                                show: true,
+                            },
+                            emphasis: {
+                                show: true
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: '#cc0042'
+                            }
+                        }
+                    },
+                    {
+                        type: 'effectScatter',//带有涟漪特效动画的散点（气泡）图
+                        coordinateSystem: 'bmap',
+                        data: convertData(data.sort(function (a, b) {
+                            return b.value - a.value;
+                        }).slice(0, 3)),
+                        symbolSize: function (val) {
+                            return val[2] / 10;
+                        },
+                        showEffectOn: 'render',//配置何时显示特效 'render' 绘制完成后显示特效 'emphasis' 高亮（hover）的时候显示特效。
+                        rippleEffect: {
+                            brushType: 'stroke'
+                        },
+                        hoverAnimation: true,
+                        label: {
+                            normal: {
+                                formatter: '{b}',//{a}：系列名。{b}：数据名。{c}：数据值。
+                                position: 'right',
+                                show: true
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: '#cc0042',
+                                shadowBlur: 10,
+                                shadowColor: '#333'
+                            }
+                        },
+                        zlevel: 1
+                    }
+                ]
+            });
+            
+            myChart.on('click', function (params) {
+                var u = geoCoordMap[params.name].u;
+                var t = ['t1'];
+                if(!u) return;
+                window.location.href = 'travel/'+t[Math.floor(Math.random()*t.length)]+'.php?u='+u;
+            });
+        </script>
+    </body>
+</html>
