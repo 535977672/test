@@ -146,7 +146,7 @@ $file = json_encode($file);
         </style>
     </head>
     <body>
-        <div class="nav"><div><span class="btn"><a href="/?u=<?php echo $u; ?>">solo</a></span></div><div></div><div></div></div>
+        <div class="nav"><div><span class="btn"><a href="travel.php?u=<?php echo $u; ?>">solo</a></span></div><div></div><div></div></div>
         <div id="wrap">
             <div id="head"></div>
         </div>
