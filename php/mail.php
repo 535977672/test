@@ -63,7 +63,6 @@ $message = '<!DOCTYPE HTML>'
     . '</body>'
     . '</html>';
 send($subject, $message, true);
-//163邮箱把 img标签 src 替换成 _src
 
 
 function send($subject, $message, $html = false){
