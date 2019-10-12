@@ -2,6 +2,7 @@
 
 require 'src/PHPMailer.php';
 require 'src/SMTP.php';
+require 'm/Ct.php';
 
 
 set_time_limit(0);
@@ -17,15 +18,15 @@ $message = '<!DOCTYPE HTML>'
     . '</head>'
     . '<body>'
     . '<div style="text-align: center; margin: 10px;">'
-    . '<a href="http://cr.amief.club">'
+    . '<a href="http://cr.amief.club?rpm=m">'
     . '<img style="max-width:400px;" src="//img.alicdn.com/imgextra/i4/97235892/O1CN01yNl9qG1tOaAv2hx6p_!!0-saturn_solar.jpg_220x220.jpg_.webp">'
     . '</a>'
     . '</div>'
     . '<div style="text-align: center; margin: 10px;">'
-    . '<a style="height: 30px; line-height: 30px; color: gray;text-decoration:none;" href="http://cr.amief.club">官网: cr.amief.club</a>'
+    . '<a style="height: 30px; line-height: 30px; color: gray;text-decoration:none;" href="http://cr.amief.club?rpm=m">官网: cr.amief.club</a>'
     . '</div>'
     . '<div style="text-align: center; margin: 10px;">'
-    . '<a style="height: 30px; line-height: 30px; color: gray;text-decoration:none;" href="http://cr.amief.club">微信</a>'
+    . '<a style="height: 30px; line-height: 30px; color: gray;text-decoration:none;" href="http://cr.amief.club?rpm=m">微信</a>'
     . '</div>'
     . '<div style="text-align: center; margin: 10px;">'
     . '<img style="width:150px;" src="http://cr.amief.club/static/img/service.jpg">'
@@ -33,8 +34,24 @@ $message = '<!DOCTYPE HTML>'
     . '</body>'
     . '</html>';
 
-$user = [];
+$message = '<!DOCTYPE HTML>'
+    . '<html>'
+    . '<head>'
+    . '<title>优甜缘</title>'
+    . '</head>'
+    . '<body>'
+    . '<div style="text-align: center; margin: 10px;">'
+    . '<a href="http://cr.amief.club?rpm=m">'
+    . '<img style="max-width:400px;" src="//img.alicdn.com/imgextra/i4/97235892/O1CN01yNl9qG1tOaAv2hx6p_!!0-saturn_solar.jpg_220x220.jpg_.webp">'
+    . '</a>'
+    . '</div>'
+    . '</body>'
+    . '</html>';
 
+
+$obj = new Ct();
+$user = $obj->selectData(1,45);
+//var_dump(implode(' ', $user));exit;
 phpmail($subject, $message, $user, true);
 
 function phpmail($subject, $message, $user = [], $html = false){
@@ -56,10 +73,10 @@ function phpmail($subject, $message, $user = [], $html = false){
         //Recipients
         $mail->setFrom('amiefclub@163.com');
         $mail->addAddress('amiefclub@163.com');//自己收
-        $mail->addBCC('535977672@qq.com');
         foreach($user as $u){
-            $mail->addBCC($u);
+            //$mail->addBCC($u);
         }
+        $mail->addBCC('535977672@qq.com');
         //附件
         //$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
         //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name

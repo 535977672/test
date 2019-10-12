@@ -1,14 +1,6 @@
 <?php
-set_time_limit(0);
-ini_set('memory_limit', '-1');
 
-
-$obj = new Ct2();
-$obj->index();
-
-
-
-class Ct2
+class Ct
 {
     public $host = '127.0.0.1';
     public $port = '3306';
@@ -24,6 +16,8 @@ class Ct2
     public $win;
     public $start = 0;
     public $conn = null;
+    
+    public static $mail = [];
     
     public function __construct(){
         $this->win = strtoupper(substr(PHP_OS,0,3))==='WIN';
@@ -69,5 +63,29 @@ class Ct2
             $stmt->execute();
             //echo $i.'-'.date('H:i:s').PHP_EOL;
         }
+    }
+    
+    public function selectData($page, $limit){
+        $start = ($page-1)*$limit;
+        $stmt = $this->conn->prepare("select * from $this->table order by id asc limit $start,$limit");
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        if(!self::$mail){
+            $stmt = $this->conn->prepare("select mail from mail order by id asc");
+            $stmt->execute();
+            $tpm = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach($tpm as $v){
+                self::$mail[] = $v['mail'];
+            }
+        }
+        $re = [];
+        foreach($data as $v){
+            $m = $v['mail'].'@qq.com';
+            if(!in_array($m, self::$mail)){
+                $re[] = $m;
+            }
+        }
+        return $re;
     }
 }
