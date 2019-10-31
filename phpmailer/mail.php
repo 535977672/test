@@ -61,18 +61,18 @@ function phpmail($subject, $message, $user = [], $html = false){
         //Server settings
         //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
         $mail->isSMTP();                                            // Send using SMTP
-        $mail->Host       = 'smtp.163.com';                    // Set the SMTP server to send through
+        $mail->Host       = 'smtp.qq.com';                    // Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-        $mail->Username   = 'amiefclub';                     // SMTP username
-        $mail->Password   = 'xiiusofhnvwxcaf1';                               // SMTP password
+        $mail->Username   = '1802146854@qq.com';                     // SMTP username
+        $mail->Password   = 'xixneernxtbwegjj';                               // SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
         $mail->Port       = 25;                                    // TCP port to connect to
         
         $mail->CharSet    = PHPMailer::CHARSET_UTF8; 
 
         //Recipients
-        $mail->setFrom('amiefclub@163.com');
-        $mail->addAddress('amiefclub@163.com');//自己收
+        $mail->setFrom('1802146854@qq.com');
+        $mail->addAddress('347802118@qq.com');//自己收
         foreach($user as $u){
             //$mail->addBCC($u);
         }
