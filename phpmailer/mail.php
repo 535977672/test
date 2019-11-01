@@ -52,7 +52,10 @@ $message = '<!DOCTYPE HTML>'
 $obj = new Ct();
 $user = $obj->selectData(4,10);
 //var_dump(implode(' ', $user));exit;
-phpmail($subject, $message, $user, true);
+$m = phpmail($subject, $message, $user, true);
+if(is_array($m)){
+   $user = $obj->delData($m);
+}
 
 function phpmail($subject, $message, $user = [], $html = false){
     $mail = new PHPMailer(true);
@@ -88,14 +91,15 @@ function phpmail($subject, $message, $user = [], $html = false){
 
         $mail->send();
         echo 'Message has been sent';
+        return true;
     } catch (Exception $e) {
         $msg = $e->getMessage();
-        preg_match_all('/[0-9]{6,11}@qq.com/', $msg, $m);
-        if($m[0]){
-            $obj = new Ct();
-            $user = $obj->delData($m[0]);
+        preg_match_all('/ ([0-9a-zA-Z_]+@[0-9a-zA-Z]{1,5}.com)/', $msg, $m);
+        if($m[1]){
+            return $m[1];
+        }else{
+            echo "Message could not be sent. Mailer Error: " . htmlspecialchars($e->getMessage());
+            return false;
         }
-        //Message could not be sent. Mailer Error: SMTP Error: The following recipients failed: 222@qq.com: Mailbox not found or access denied 226@qq.com: Mailbox not found or access denied
-        echo "Message could not be sent. Mailer Error: " . htmlspecialchars($e->getMessage());
     }
 }
