@@ -2,9 +2,8 @@
 
 require 'm/Ct.php';
 
-set_time_limit(0);
-ini_set('memory_limit', '-1');
+$data = '';
 
 
 $obj = new Ct();
-$obj->index();
+$user = $obj->insertData($data);
