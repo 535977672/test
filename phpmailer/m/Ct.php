@@ -6,7 +6,7 @@ class Ct
     public $port = '3306';
     public $db = 'test';
     public $root = 'root';
-    public $pwd = 'root';
+    public $pwd = '11111111';
     public $options = [
         PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'', 
         PDO::ATTR_PERSISTENT => true,
@@ -37,14 +37,14 @@ class Ct
         echo date('H:i:s').PHP_EOL;
     }
     
-    public function selectData($page, $limit){
-        $start = ($page-1)*$limit;
-        $stmt = $this->conn->prepare("select * from $this->table order by id asc limit $start,$limit");
+    public function selectData($limit){
+        $start = intval(file_get_contents('./m/pos.ini'));
+        $stmt = $this->conn->prepare("select * from $this->table where id > $start order by id asc limit 0,$limit");
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         if(!self::$mail){
-            $stmt = $this->conn->prepare("select mail from mail order by id asc");
+            $stmt = $this->conn->prepare("select id,mail from mail order by id asc");
             $stmt->execute();
             $tpm = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach($tpm as $v){
@@ -52,9 +52,14 @@ class Ct
             }
         }
         $re = [];
-        foreach($data as $v){
+        $len = count($data);
+        foreach($data as $k=>$v){
             if(!in_array($v['mail'], self::$mail)){
                 $re[] = $v['mail'];
+                if($k == $len-1){
+                    file_put_contents('./m/pos_bak.ini', $start);
+                    file_put_contents('./m/pos.ini', $v['id']);
+                }
             }
         }
         return $re;
@@ -64,5 +69,12 @@ class Ct
         $data = implode("','", $data);
         $stmt = $this->conn->prepare("delete from $this->table where `mail` in ('$data')");
         $stmt->execute();
+    }
+    
+    public function selectSmtp(){
+        $stmt = $this->conn->prepare("select * from mail_smtp");
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
     }
 }

@@ -344,12 +344,15 @@ class SMTP
             );
             set_error_handler([$this, 'errorHandler']);
             $this->smtp_conn = fsockopen(
+            //$this->smtp_conn = pfsockopen(
                 $host,
                 $port,
                 $errno,
                 $errstr,
                 $timeout
             );
+            
+            //$this->smtp_conn = stream_socket_client("tcp://".$host.":".$port, $errno,  $errstr,  $timeout);
             restore_error_handler();
         }
         // Verify we connected properly

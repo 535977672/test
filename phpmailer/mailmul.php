@@ -41,67 +41,65 @@ $message = '<!DOCTYPE HTML>'
 
 
 $obj = new Ct();
+$smtp = $obj->selectSmtp();
+shuffle($smtp);
+$cursmtp = array_pop($smtp);
 $n = 200;
 for($i = 0; $i < $n; $i++){
-    $user = $obj->selectData(20);
+    $user = $obj->selectData($cursmtp['limit']);
     //var_dump(implode(' ', $user));exit;
     if($user){
-        $m = phpmail($subject, $message, $user, true);
-        if(is_array($m)){
+        array_push($user, 'amiefclub@163.com');
+        $m = phpmail($subject, $message, $user, $cursmtp);
+        if(is_array($m) && !empty($m)){
            $user = $obj->delData($m);
+        }else if($m === false){
+            if($smtp) $cursmtp = array_pop($smtp);
+            else exit;
         }
         sleep(rand(60, 180));
     }
 }
 
-function phpmail($subject, $message, $user = [], $html = false){
+function phpmail($subject, $message, $user, $cursmtp){
     $mail = new PHPMailer(true);
 
     try {
-        //Server settings
-        //$mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-        $mail->isSMTP();                                            // Send using SMTP
-        $mail->Host       = 'smtp.qq.com';                    // Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-        $mail->Username   = '1802146854';                     // SMTP username
-        $mail->Password   = 'xixneernxtbwegjj';                               // SMTP password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
-        $mail->Port       = 25;                                    // TCP port to connect to
+        $mail->isSMTP();
+        $mail->Host       = $cursmtp['host'];
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $cursmtp['name'];
+        $mail->Password   = $cursmtp['pass'];
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = $cursmtp['port'];
         
         $mail->CharSet    = PHPMailer::CHARSET_UTF8; 
 
-        //Recipients
-        $mail->setFrom('1802146854@qq.com');
-        $mail->addAddress('347802118@qq.com');//自己收
+        $mail->setFrom($cursmtp['name']);
+        $mail->addAddress('347802118@qq.com');
         foreach($user as $u){
             $mail->addBCC($u);
         }
-        $mail->addBCC('amiefclub@163.com');
-        //附件
-        //$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-        //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
-
-        // Content
-        $mail->isHTML($html);
+        $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $message;
 
         $mail->send();
-        //echo 'Message has been sent';
+        file_put_contents('./log.txt', 'suc ' . substr($cursmtp['name'], 2, 7).PHP_EOL, FILE_APPEND);
         return true;
     } catch (Exception $e) {
-        $msg = $e->getMessage();
+        $msg = htmlspecialchars($e->getMessage());
         preg_match_all('/ ([0-9a-zA-Z_]+@[0-9a-zA-Z]{1,5}.com)/', $msg, $m);
         if($m[1]){
+            file_put_contents('./log.txt', 'suc ' . substr($cursmtp['name'], 2, 7).PHP_EOL, FILE_APPEND);
             return $m[1];
         }else{
-            //echo "Message could not be sent. Mailer Error: " . htmlspecialchars($e->getMessage());
-            $msg = "Message could not be sent. Mailer Error: " . htmlspecialchars($e->getMessage());
+            file_put_contents('./log.txt', 'err ' . substr($cursmtp['name'], 2, 7).PHP_EOL, FILE_APPEND);
+            $msg = "Message could not be sent. Mailer Error: " . $msg;
             $pos = intval(file_get_contents('./m/pos_bak.ini'));
             file_put_contents('./m/pos.ini', $pos);
             file_put_contents('./log.txt', $pos . $msg.PHP_EOL, FILE_APPEND);
-            exit;
-            //return false;
+            return false;
         }
     }
 }

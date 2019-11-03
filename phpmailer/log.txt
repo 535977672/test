@@ -1,0 +1,20 @@
+err 7802118
+err 7802118
+err 7802118
+err 7802118
+390Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err iefclub
+390Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 0214685
+390Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 0487595
+390Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 2387456
+390Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 8345360
+390Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+suc 8345360
+suc 8345360
+suc 8345360
+suc 0487595
+suc 0487595
