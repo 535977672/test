@@ -18,3 +18,36 @@ suc 8345360
 suc 8345360
 suc 0487595
 suc 0487595
+suc 0487595
+suc 0487595
+suc 0487595
+err 0487595
+534Message could not be sent. Mailer Error: SMTP Error: data not accepted.
+suc 0214685
+suc 0214685
+suc 0214685
+suc 0214685
+suc 0214685
+err 0214685
+624Message could not be sent. Mailer Error: SMTP Error: data not accepted.
+suc 2387456
+err 2387456
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 8345360
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err iefclub
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 7802118
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 0214685
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 0487595
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 7802118
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 2387456
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 8345360
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err iefclub
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
