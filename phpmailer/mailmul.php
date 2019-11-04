@@ -74,6 +74,10 @@ function phpmail($subject, $message, $user, $cursmtp){
         $mail->Port       = $cursmtp['port'];
         
         $mail->CharSet    = PHPMailer::CHARSET_UTF8; 
+        
+        if($cursmtp['ssl'] == 1){
+            $mail->SMTPSecure = 'ssl';
+        }
 
         $mail->setFrom($cursmtp['name']);
         $mail->addAddress('347802118@qq.com');
