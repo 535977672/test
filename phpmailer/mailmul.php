@@ -57,7 +57,7 @@ for($i = 0; $i < $n; $i++){
             if($smtp) $cursmtp = array_pop($smtp);
             else exit;
         }
-        sleep(rand(60, 180));
+        sleep(rand(160, 580));
     }
 }
 

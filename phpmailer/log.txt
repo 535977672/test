@@ -18,3 +18,83 @@ suc 8345360
 suc 8345360
 suc 0487595
 suc 0487595
+err iefclub
+480Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+suc 8345360
+suc 8345360
+suc 8345360
+suc 8345360
+suc 8345360
+err 8345360
+570Message could not be sent. Mailer Error: SMTP Error: data not accepted.
+suc uty@ami
+suc uty@ami
+suc uty@ami
+suc uty@ami
+err 8345360
+570Message could not be sent. Mailer Error: SMTP Error: data not accepted.
+err iefclub
+570Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+suc 0214685
+suc 0214685
+suc 0214685
+err iefclub
+624Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+suc 0214685
+err 0214685
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 7802118
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 8345360
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 0487595
+642Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+suc uty@ami
+suc uty@ami
+suc uty@ami
+suc uty@ami
+suc uty@ami
+suc 7802118
+suc 7802118
+suc 7802118
+suc 7802118
+suc 7802118
+suc 7802118
+err 7802118
+733Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+suc uty@ami
+suc uty@ami
+suc uty@ami
+suc uty@ami
+suc uty@ami
+err uty@ami
+823Message could not be sent. Mailer Error: SMTP Error: data not accepted.
+suc 2387456
+err 2387456
+841Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 8345360
+841Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 0487595
+841Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err iefclub
+841Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 0214685
+841Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err iefclub
+841Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+suc 0487595
+suc 0487595
+suc 0487595
+err 0487595
+895Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err uty@ami
+895Message could not be sent. Mailer Error: SMTP Error: data not accepted.
+err 7802118
+895Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 8345360
+895Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 2387456
+895Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 0214685
+895Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+suc 7802118
