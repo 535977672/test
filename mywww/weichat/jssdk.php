@@ -4,13 +4,16 @@ class JSSDK {
     private $appSecret;
     private $config;
     private $errMsg = [];
+    private $config_path = __DIR__ . '/config/config.php';
+    private $jsapi_ticket_path = __DIR__ . '/config/jsapi_ticket.php';
+    private $access_token_path = __DIR__ . '/config/access_token.php';
 
     public function __construct($appId = '', $appSecret = '') {
         if ($appId) {
             $this->appId = $appId;
             $this->appSecret = $appSecret;
         } else {
-            $this->config = json_decode($this->get_php_file("config.php"));
+            $this->config = json_decode($this->get_php_file($this->config_path));
             $this->appId = $this->config->appId;
             $this->appSecret = $this->config->appSecret;
         }
@@ -95,7 +98,7 @@ class JSSDK {
             if ($ticket) {
                 $data->expire_time = time() + 7000;
                 $data->jsapi_ticket = $ticket;
-                $this->set_php_file("jsapi_ticket.php", json_encode($data));
+                $this->set_php_file($this->jsapi_ticket_path, json_encode($data));
             } else {
                 return false;
             }
@@ -118,7 +121,7 @@ class JSSDK {
             if ($access_token) {
                 $data->expire_time = time() + 7000;
                 $data->access_token = $access_token;
-                $this->set_php_file("access_token.php", json_encode($data));
+                $this->set_php_file($this->access_token, json_encode($data));
             } else {
                 $this->setMsg($res->errcode, $res->errmsg);
                 return false;
@@ -127,6 +130,16 @@ class JSSDK {
             $access_token = $data->access_token;
         }
         return $access_token;
+    }
+
+    private function genUrl($url, $params = '') {
+        if (strpos($url, '/') === 0) {
+            $url = substr($url, 1);
+        }
+        if (is_array($params)) {
+            $params = http_build_query($params);
+        }
+        return "https://api.weixin.qq.com/" . $url . "?access_token=" . $this->getAccessToken() . ($params ? '&' . $params : '');
     }
 
     /**
@@ -291,7 +304,7 @@ class JSSDK {
      */
     public function createMenu($data) {
         $data = (is_object($data) || is_array($data)) ? json_encode($data, JSON_UNESCAPED_UNICODE) : $data;//不能包含 \uxxxx 格式的字符
-        $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token=' . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/menu/create");
         return $this->http($url, $data, 1);
     }
 
@@ -300,7 +313,7 @@ class JSSDK {
      * @return mixed
      */
     public function getMenu() {
-        $url = 'https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token=' . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/get_current_selfmenu_info");
         return $this->http($url, '', 0, false);
     }
 
@@ -309,7 +322,7 @@ class JSSDK {
      * @return bool
      */
     public function delMenu() {
-        $url = 'https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=' . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/menu/delete");
         return $this->http($url, '', 1, false);
     }
 
@@ -329,6 +342,38 @@ class JSSDK {
             'MsgType' => 'text',
             'Content' => $content
         ];
+        $xml = $this->arrToXml($data);
+        return $xml;
+    }
+
+    /**
+     * 将消息转发到客服
+     * 如果公众号处于开发模式，普通微信用户向公众号发消息时，微信服务器会先将消息POST到开发者填写的url上，
+     * 如果希望将消息转发到客服系统，则需要开发者在响应包中返回MsgType为transfer_customer_service的消息，
+     * 微信服务器收到响应后会把当次发送的消息转发至客服系统。
+     * 您也可以在返回transfer_customer_service消息时，在XML中附上TransInfo信息指定分配给某个客服帐号。
+     * <MsgType><![CDATA[transfer_customer_service]]></MsgType>
+     * <TransInfo>
+     *      <KfAccount><![CDATA[test1@test]]></KfAccount>
+     * </TransInfo>
+     * @param $from
+     * @param $to
+     * @param $kf_account 如果指定的客服没有接入能力(不在线、没有开启自动接入或者自动接入已满)，该用户会被直接接入到指定客服，
+     *                      不再通知其它客服，不会被其他客服接待。建议在指定客服时，先查询客服的接入能力
+     * @return xml
+     */
+    public function sendKfText($from, $to, $kf_account = '') {
+        $data = [
+            'ToUserName' => $to,
+            'FromUserName' => $from,
+            'CreateTime' => time(),
+            'MsgType' => 'transfer_customer_service'
+        ];
+        if ($kf_account) {
+            $data['TransInfo'] = [
+                'KfAccount' => $kf_account
+            ];
+        }
         $xml = $this->arrToXml($data);
         return $xml;
     }
@@ -477,7 +522,7 @@ class JSSDK {
      * @return bool
      */
     public function upload($file, $type = 'image') {
-        $url = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=" . $this->getAccessToken() . "&type=" . $type;
+        $url = $this->genUrl("cgi-bin/media/upload", "type=" . $type);
         return $this->http($url, '', 'media_id', true, $file);
     }
 
@@ -487,7 +532,7 @@ class JSSDK {
      * @return bool|mixed
      */
     public function getUpload($media_id) {
-        $url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" . $this->getAccessToken() . "&media_id=" . $media_id;
+        $url = $this->genUrl("cgi-bin/media/get", "media_id=" . $media_id);
         $re = $this->httpGet($url);
         $res = json_decode($re);
         if($res && $res->errcode){
@@ -507,7 +552,7 @@ class JSSDK {
      * @return bool|string
      */
     public function add_news($data) {
-        $url = "https://api.weixin.qq.com/cgi-bin/material/add_news?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/material/add_news");
         return $this->http($url, $data, 'media_id');
     }
 
@@ -519,7 +564,7 @@ class JSSDK {
      * @return bool
      */
     public function updateNews($data) {
-        $url = "https://api.weixin.qq.com/cgi-bin/material/update_news?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/material/update_news");
         return $this->http($url, $data, 1);
     }
 
@@ -530,7 +575,7 @@ class JSSDK {
      * @return bool|string
      */
     public function uploadImg($file) {
-        $url = "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/media/uploadimg");
         return $this->http($url, '', 'url', true, $file);
     }
 
@@ -549,7 +594,7 @@ class JSSDK {
      * @return bool|string
      */
     public function addMaterial($file, $type, $vodeo_title = '', $introduction = '') {
-        $url = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=" . $this->getAccessToken() . "&type=" . $type;
+        $url = $this->genUrl("cgi-bin/material/add_material", "type=" . $type);
         if($type == 'video') {
             $data['media'] = new CURLFile(realpath($file));
             $data['description'] = json_encode(["title" => $vodeo_title, "introduction" => $introduction], JSON_UNESCAPED_UNICODE);
@@ -567,7 +612,7 @@ class JSSDK {
      * @return bool|mixed
      */
     public function getMaterial($media_id) {
-        $url = "https://api.weixin.qq.com/cgi-bin/material/get_material?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/material/get_material");
         $re = $this->httpPost($url, json_encode(['media_id' => $media_id]));
         $res = json_decode($re);
         if($res && $res->errcode){
@@ -587,7 +632,7 @@ class JSSDK {
      * @return bool
      */
     public function delMaterial($media_id) {
-        $url = "https://api.weixin.qq.com/cgi-bin/material/del_material?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/material/del_material");
         return $this->http($url, json_encode(['media_id' => $media_id]), 1);
     }
 
@@ -602,7 +647,7 @@ class JSSDK {
      * @return bool|mixed
      */
     public function getMaterialCount() {
-        $url = "https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/material/get_materialcount");
         return $this->http($url, '', 0, false);
     }
 
@@ -616,7 +661,7 @@ class JSSDK {
      * @return bool|mixed
      */
     public function batchGetMaterial($data) {
-        $url = "https://api.weixin.qq.com/cgi-bin/material/batchget_material?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/material/batchget_material");
         return $this->http($url, $data, 0);
     }
 
@@ -633,7 +678,7 @@ class JSSDK {
             "title" => $title,
             "description" => $description
         ];
-        $url = "https://api.weixin.qq.com/cgi-bin/media/uploadvideo?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/media/uploadvideo");
         return $this->http($url, $data, 'media_id');
     }
 
@@ -645,7 +690,7 @@ class JSSDK {
      * @return mixed
      */
     public function uploadNews($data) {
-        $url = "https://api.weixin.qq.com/cgi-bin/media/uploadnews?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/media/uploadnews");
         return $this->http($url, $data, 'media_id');
     }
 
@@ -670,11 +715,11 @@ class JSSDK {
      * 获取到对应的图文消息的数据，是图文分析数据接口中的msgid字段中的前半部分，详见图文分析数据接口中的msgid字段的介绍。
      */
     public function massSendAll($data, $toUser) {
-        $url = "https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/message/mass/sendall");
         if (!empty($toUser)) { //根据OpenID列表群发【订阅号不可用，服务号认证后可用】
             $data['touser'] = $toUser;
             if(isset($data['filter'])) unset($data['filter']);
-            $url = "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token=" . $this->getAccessToken();
+            $url = $this->genUrl("cgi-bin/message/mass/send");
         } else if($data['filter']['is_to_all'] && isset($data['filter']['tag_id'])) { //根据标签进行群发【订阅号与服务号认证后均可用】
             unset($data['filter']['tag_id']);
         }
@@ -687,7 +732,7 @@ class JSSDK {
      * @return mixed
      */
     public function massSend($data) {
-        $url = "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/message/mass/send");
         return $this->http($url, $data);
     }
 
@@ -702,7 +747,7 @@ class JSSDK {
      * @return boolean
      */
     public function massDelete($msg_id, $article_idx = 0) {
-        $url = "https://api.weixin.qq.com/cgi-bin/message/mass/delete?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/message/mass/delete");
         return $this->http($url, ['msg_id' => $msg_id, 'article_idx' => $article_idx], 1);
     }
 
@@ -714,7 +759,7 @@ class JSSDK {
      * @return string
      */
     public function massPreview($data) {
-        $url = "https://api.weixin.qq.com/cgi-bin/message/mass/preview?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/message/mass/preview");
         return $this->http($url, $data, 'msg_id');
     }
 
@@ -724,7 +769,7 @@ class JSSDK {
      * @return string 消息发送后的状态，SEND_SUCCESS表示发送成功，SENDING表示发送中，SEND_FAIL表示发送失败，DELETE表示已删除
      */
     public function massGet($msg_id) {
-        $url = "https://api.weixin.qq.com/cgi-bin/message/mass/get?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/message/mass/get");
         return $this->http($url, ['msg_id' => $msg_id], 'msg_status');
     }
 
@@ -742,7 +787,7 @@ class JSSDK {
      * realspeed 群发速度的真实值 单位：万/分钟
      */
     public function massSpeedGet() {
-        $url = "https://api.weixin.qq.com/cgi-bin/message/mass/speed/get?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/message/mass/speed/get");
         return $this->http($url);
     }
 
@@ -758,7 +803,7 @@ class JSSDK {
      * @return mixed
      */
     public function massSpeedSet($speed) {
-        $url = "https://api.weixin.qq.com/cgi-bin/message/mass/speed/set?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/message/mass/speed/set");
         return $this->http($url, ['speed' => $speed]);
     }
 
@@ -909,7 +954,7 @@ class JSSDK {
      * @return boolean
      */
     public function templateSetIndustry($industry_id1, $industry_id2) {
-        $url = "https://api.weixin.qq.com/cgi-bin/template/api_set_industry?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/template/api_set_industry");
         return $this->http($url, ['industry_id1' => $industry_id1, 'industry_id2' => $industry_id2], 1);
     }
 
@@ -922,7 +967,7 @@ class JSSDK {
      * @return object
      */
     public function templateGetIndustry() {
-        $url = "https://api.weixin.qq.com/cgi-bin/template/get_industry?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/template/get_industry");
         return $this->http($url, '', 0, false);
     }
 
@@ -932,7 +977,7 @@ class JSSDK {
      * @return string template_id
      */
     public function templateAddTemplate($template_id_short) {
-        $url = "https://api.weixin.qq.com/cgi-bin/template/api_add_template?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/template/api_add_template");
         return $this->http($url, ['template_id_short' => $template_id_short], 'template_id');
     }
 
@@ -941,7 +986,7 @@ class JSSDK {
      * @return object
      */
     public function templateGetAllPT() {
-        $url = "https://api.weixin.qq.com/cgi-bin/template/get_all_private_template?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/template/get_all_private_template");
         return $this->http($url, '', 0, false);
     }
 
@@ -951,7 +996,7 @@ class JSSDK {
      * @return boolean
      */
     public function templateDelPT($template_id) {
-        $url = "https://api.weixin.qq.com/cgi-bin/template/del_private_template?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/template/del_private_template");
         return $this->http($url, ['template_id' => $template_id], 1);
     }
 
@@ -961,7 +1006,7 @@ class JSSDK {
      * @return string msgid 消息id
      */
     public function templateSend($data) {
-        $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/message/template/send");
         return $this->http($url, $data, 'msgid');
     }
 
@@ -975,6 +1020,10 @@ class JSSDK {
 
     /**客服消息***********************************************************/
     /**
+     * 多客服全面升级为新版客服功能
+     * 多客服软件将停止服务，多客服将不再支持登录、收发用户消息等功能
+     */
+    /**
      * 添加客服帐号
      * 每个公众号最多添加10个客服账号
      * @param $kf_account "test1@test" 账号前缀@公众号微信号
@@ -982,10 +1031,11 @@ class JSSDK {
      * @param $password 格式为密码明文的32位加密MD5值
      * @return boolean
      */
-    public function kfAdd($kf_account, $nickname, $password) {
-        $url = "https://api.weixin.qq.com/customservice/kfaccount/add?access_token=" . $this->getAccessToken();
-        return $this->http($url, compact('kf_account', 'nickname', 'password'), 1);
-    }
+//    public function kfAdd($kf_account, $nickname, $password) {
+//        $url = $this->genUrl("customservice/kfaccount/add");
+//        $password = md5($password);
+//        return $this->http($url, compact('kf_account', 'nickname', 'password'), 1);
+//    }
 
     /**
      * 修改客服帐号
@@ -994,10 +1044,11 @@ class JSSDK {
      * @param $password
      * @return boolean
      */
-    public function kfUpdate($kf_account, $nickname, $password) {
-        $url = "https://api.weixin.qq.com/customservice/kfaccount/update?access_token=" . $this->getAccessToken();
-        return $this->http($url, compact('kf_account', 'nickname', 'password'), 1);
-    }
+//    public function kfUpdate($kf_account, $nickname, $password) {
+//        $url = $this->genUrl("customservice/kfaccount/update");
+//        $password = md5($password);
+//        return $this->http($url, compact('kf_account', 'nickname', 'password'), 1);
+//    }
 
     /**
      * 删除客服帐号
@@ -1006,9 +1057,99 @@ class JSSDK {
      * @param $password
      * @return boolean
      */
-    public function kfDel($kf_account, $nickname, $password) {
-        $url = "https://api.weixin.qq.com/customservice/kfaccount/del?access_token=" . $this->getAccessToken();
-        return $this->http($url, compact('kf_account', 'nickname', 'password'), 1);
+//    public function kfDel($kf_account, $nickname, $password) {
+//        $url = $this->genUrl("customservice/kfaccount/del");
+//        $password = md5($password);
+//        return $this->http($url, compact('kf_account', 'nickname', 'password'), 1);
+//    }
+
+    /**
+     * 设置客服帐号的头像
+     * @param $kf_account
+     * @param $file
+     * @return boolean
+     */
+//    public function kfUpLoadHeadImg($kf_account, $file) {
+//        $url = $this->genUrl("customservice/kfaccount/uploadheadimg", compact("kf_account"));
+//        return $this->http($url, '', 1, true, $file);
+//    }
+
+    /**
+     * 获取所有客服账号
+     * @return object
+     */
+//    public function kfGetKfList() {
+//        $url = $this->genUrl("cgi-bin/customservice/getkflist");
+//        return $this->http($url, '', 0, false);
+//    }
+
+    /**
+     * 客服接口-发消息
+     * @param $data
+     * @return object
+     */
+//    public function kfSend($data) {
+//        $url = $this->genUrl("cgi-bin/message/custom/send");
+//        return $this->http($url, $data);
+//    }
+
+    /**
+     * 客服输入状态
+     * @param $touser 普通用户（openid）
+     * @param $command "Typing"：对用户下发“正在输入"状态 "CancelTyping"：取消对用户的”正在输入"状态
+     * @return boolean
+     */
+//    public function kfTyping($touser, $command) {
+//        $url = $this->genUrl("cgi-bin/message/custom/typing");
+//        return $this->http($url, compact('touser', 'command'), 1);
+//    }
+
+    /**新版客服功能***********************************************************/
+    /**
+     * 添加客服帐号
+     * 65400	API不可用，即没有开通或升级到新版客服功能
+     * @param $kf_account "test1@test" 账号前缀@公众号微信号 完整客服帐号，格式为：帐号前缀@公众号微信号，帐号前缀最多10个字符，必须是英文、数字字符或者下划线，后缀为公众号微信号，长度不超过30个字符
+     * @param $nickname 客服昵称，最长16个字
+     * @return boolean
+     */
+    public function kfAdd($kf_account, $nickname) {
+        $url = $this->genUrl("customservice/kfaccount/add");
+        return $this->http($url, compact('kf_account', 'nickname'), 1);
+    }
+
+    /**
+     * 邀请绑定客服帐号
+     * 新添加的客服帐号是不能直接使用的，只有客服人员用微信号绑定了客服账号后，方可登录Web客服进行操作。
+     * 此接口发起一个绑定邀请到客服人员微信号，客服人员需要在微信客户端上用该微信号确认后帐号才可用。
+     * 尚未绑定微信号的帐号可以进行绑定邀请操作，邀请未失效时不能对该帐号进行再次绑定微信号邀请。
+     * @param $kf_account 完整客服帐号，格式为：帐号前缀@公众号微信号
+     * @param $invite_wxe 接收绑定邀请的客服微信号
+     * @return boolean
+     */
+    public function kfInviteWorker($kf_account, $invite_wxe) {
+        $url = $this->genUrl("customservice/kfaccount/inviteworker");
+        return $this->http($url, compact('kf_account', 'invite_wx'), 1);
+    }
+
+    /**
+     * 设置客服信息
+     * @param $kf_account "test1@test" 账号前缀@公众号微信号
+     * @param $nickname 客服昵称，最长16个字
+     * @return boolean
+     */
+    public function kfUpdate($kf_account, $nickname) {
+        $url = $this->genUrl("customservice/kfaccount/update");
+        return $this->http($url, compact('kf_account', 'nickname'), 1);
+    }
+
+    /**
+     * 删除客服帐号
+     * @param $kf_account "test1@test"
+     * @return boolean
+     */
+    public function kfDel($kf_account) {
+        $url = $this->genUrl("customservice/kfaccount/del");
+        return $this->http($url, compact('kf_account'), 1);
     }
 
     /**
@@ -1018,7 +1159,7 @@ class JSSDK {
      * @return boolean
      */
     public function kfUpLoadHeadImg($kf_account, $file) {
-        $url = "https://api.weixin.qq.com/customservice/kfaccount/uploadheadimg?access_token=" . $this->getAccessToken() . "&kf_account=" . $kf_account;
+        $url = $this->genUrl("customservice/kfaccount/uploadheadimg", compact("kf_account"));
         return $this->http($url, '', 1, true, $file);
     }
 
@@ -1027,8 +1168,319 @@ class JSSDK {
      * @return object
      */
     public function kfGetKfList() {
-        $url = "https://api.weixin.qq.com/customservice/kfaccount/getkflist?access_token=" . $this->getAccessToken();
+        $url = $this->genUrl("cgi-bin/customservice/getkflist");
         return $this->http($url, '', 0, false);
+    }
+
+    /**
+     * 获取在线客服
+     * @return object
+     */
+    public function kfGetOnlineKfList() {
+        $url = $this->genUrl("cgi-bin/customservice/getonlinekflist");
+        return $this->http($url, '', 0, false);
+    }
+
+    /**
+     * 创建会话
+     * 此接口在客服和用户之间创建一个会话，如果该客服和用户会话已存在，则直接返回0。指定的客服帐号必须已经绑定微信号且在线。
+     * @param $kf_account
+     * @param $openid 粉丝的openid
+     * @return boolean
+     */
+    public function kfSessionCreate($kf_account, $openid) {
+        $url = $this->genUrl("customservice/kfsession/create");
+        return $this->http($url, compact('kf_account', 'openid'));
+    }
+
+    /**
+     * 关闭会话
+     * @param $kf_account
+     * @param $openid 粉丝的openid
+     * @return boolean
+     */
+    public function kfSessionClose($kf_account, $openid) {
+        $url = $this->genUrl("customservice/kfsession/close");
+        return $this->http($url, compact('kf_account', 'openid'));
+    }
+
+    /**
+     * 获取客户会话状态
+     * 此接口获取一个客户的会话，如果不存在，则kf_account为空。
+     * @param $openid 粉丝的openid
+     * @return object  {      "createtime": 123456789,      "kf_account": "test1@test"   }
+     */
+    public function kfSessionGet($openid) {
+        $url = $this->genUrl("/customservice/kfsession/getsession", "openid=$openid");
+        return $this->http($url);
+    }
+
+    /**
+     * 获取客服会话列表
+     * 此接口获取一个客户的会话，如果不存在，则kf_account为空。
+     * @param $kf_account
+     * @return object { "sessionlist"   : [ { "createtime"   : 123456789, "openid"   :  "OPENID" } ] }
+     */
+    public function kfSessionGetList($kf_account) {
+        $url = $this->genUrl("customservice/kfsession/getsessionlist", "kf_account=$kf_account");
+        return $this->http($url);
+    }
+
+    /**
+     * 获取未接入会话列表
+     * 未接入会话列表，最多返回100条数据，按照来访顺序
+     * @return object
+     */
+    public function kfSessionGetWaitCase() {
+        $url = $this->genUrl("customservice/kfsession/getwaitcase");
+        return $this->http($url);
+    }
+
+    /**
+     * 获取聊天记录
+     * 此接口返回的聊天记录中，对于图片、语音、视频，分别展示成文本格式的[image]、[voice]、[video]。
+     * 对于较可能包含重要信息的图片消息，后续将提供图片拉取URL，近期将上线。
+     * @param $starttime 起始时间，unix时间戳
+     * @param $endtime 结束时间，unix时间戳，每次查询时段不能超过24小时
+     * @param $msgid 消息id顺序从小到大，从1开始
+     * @param $number 每次获取条数，最多10000条
+     * @return object
+     */
+    public function kfSessionGetMsgList($starttime, $endtime, $msgid = 1, $number = 20) {
+        $url = $this->genUrl("customservice/msgrecord/getmsglist");
+        return $this->http($url, compact('starttime', 'endtime', 'msgid', 'number'));
+    }
+
+    /**
+     * 将消息转发到客服
+     * 如果公众号处于开发模式，普通微信用户向公众号发消息时，微信服务器会先将消息POST到开发者填写的url上，
+     * 如果希望将消息转发到客服系统，则需要开发者在响应包中返回MsgType为transfer_customer_service的消息，
+     * 微信服务器收到响应后会把当次发送的消息转发至客服系统。
+     * 您也可以在返回transfer_customer_service消息时，在XML中附上TransInfo信息指定分配给某个客服帐号。
+     * <MsgType><![CDATA[transfer_customer_service]]></MsgType>
+     * <TransInfo>
+     *      <KfAccount><![CDATA[test1@test]]></KfAccount>
+     * </TransInfo>
+     */
+
+    /**用户管理***********************************************************/
+    /**
+     * 创建标签
+     * 一个公众号，最多可以创建100个标签。
+     * @param $name 标签名（30个字符以内）
+     * @return string 标签id，由微信分配
+     */
+    public function tagsCreate($name) {
+        $url = $this->genUrl("cgi-bin/tags/create");
+        return $this->http($url, ['tag' => ['name' => $name]])->tag->id;
+    }
+
+    /**
+     * 获取公众号已创建的标签
+     * @return object
+     */
+    public function tagsGet() {
+        $url = $this->genUrl("cgi-bin/tags/get");
+        return $this->http($url, '', 0, false);
+    }
+    
+    /**
+     * 编辑标签
+     * @param $id 标签id
+     * @param $name 标签名
+     * @return boolean
+     */
+    public function tagsUpdate($id, $name) {
+        $url = $this->genUrl("cgi-bin/tags/update");
+        return $this->http($url, ['tag' => ['id' => $id, 'name' => $name]], 1);
+    }
+
+    /**
+     * 删除标签
+     * 当某个标签下的粉丝超过10w时，后台不可直接删除标签此时，开发者可以对该标签下的openid列表，
+     * 先进行取消标签的操作，直到粉丝数不超过10w后，才可直接删除该标签。
+     * @param $id 标签id
+     * @return boolean
+     */
+    public function tagsDelete($id) {
+        $url = $this->genUrl("cgi-bin/tags/delete");
+        return $this->http($url, ['tag' => ['id' => $id]], 1);
+    }
+
+    /**
+     * 获取标签下粉丝列表
+     * @param $tagid 标签id
+     * @param $next_openid 第一个拉取的OPENID，不填默认从头开始拉取
+     * @return object {"count":0}
+     * {"count":1,"data":{"openid":["oul9P1fQqxD8sW4zyVAcm9W9hyo0"]},"next_openid":"oul9P1fQqxD8sW4zyVAcm9W9hyo0"}
+     */
+    public function tagsUserGet($tagid, $next_openid = '') {
+        $url = $this->genUrl("cgi-bin/user/tag/get");
+        return $this->http($url, compact("tagid", "next_openid"));
+    }
+
+    /**
+     * 批量为用户打标签
+     * @param $openid_list [] 粉丝列表
+     * @param $tagid 标签id
+     * @return boolean
+     */
+    public function tagsBatchTagging($openid_list, $tagid) {
+        $url = $this->genUrl("cgi-bin/tags/members/batchtagging");
+        return $this->http($url, ['openid_list' => $openid_list, 'tagid' => $tagid], 1);
+    }
+
+    /**
+     * 批量为用户取消标签
+     * @param $openid_list 粉丝列表
+     * @param $tagid 标签id
+     * @return object
+     */
+    public function tagsBatchUnTagging($openid_list, $tagid) {
+        $url = $this->genUrl("cgi-bin/tags/members/batchuntagging");
+        return $this->http($url, ['openid_list' => $openid_list, 'tagid' => $tagid], 1);
+    }
+
+    /**
+     * 获取用户身上的标签列表
+     * @param $openid openid
+     * @return object {   "tagid_list":[//被置上的标签列表 134, 2   ] }
+     */
+    public function tagsGetIdList($openid) {
+        $url = $this->genUrl("cgi-bin/tags/getidlist");
+        return $this->http($url, compact("openid"));
+    }
+
+    /**
+     * 设置用户备注名 开发者可以通过该接口对指定用户设置备注名，该接口暂时开放给微信认证的服务号。
+     * @param $openid openid
+     * @param $remark 备注名
+     * @return boolean
+     */
+    public function tagsUpdateRemark($openid, $remark) {
+        $url = $this->genUrl("cgi-bin/user/info/updateremark");
+        return $this->http($url, compact("openid", "remark"), 1);
+    }
+
+    /**
+     * 获取用户基本信息(UnionID机制)
+     * @param $openid openid
+     * @return object
+     */
+    public function getUserInfo($openid) {
+        $url = $this->genUrl("cgi-bin/user/info", "openid=$openid&lang=zh_CN");
+        return $this->http($url, '', 0, false);
+    }
+
+    /**
+     * 批量获取用户基本信息
+     * @param $user_list [["openid","lang"],["openid","lang"]]
+     * @return object
+     */
+    public function getUserInfoBatch($user_list) {
+        $url = $this->genUrl("cgi-bin/user/info/batchget");
+        return $this->http($url, ['user_list' => $user_list], 0);
+    }
+
+    /**
+     * 获取用户列表
+     * 一次拉取调用最多拉取10000个关注者的OpenID
+     * @param $next_openid
+     * @return object { "total":2, "count":2, "data":{ "openid":["OPENID1","OPENID2"]}, "next_openid":"NEXT_OPENID" }
+     */
+    public function getUserGet($next_openid = '') {
+        $url = $this->genUrl("cgi-bin/user/get", compact("next_openid"));
+        return $this->http($url, '', 0, false);
+    }
+
+    /**
+     * 获取公众号的黑名单列表
+     * 每次调用最多可拉取 10000 个OpenID
+     * @param $begin_openid
+     * @return object {"total":0,"count":0}
+     * {"total":1,"count":1,"data":{"openid":["oul9P1fQqxD8sW4zyVAcm9W9hyo0"]},"next_openid":"oul9P1fQqxD8sW4zyVAcm9W9hyo0"}
+     */
+    public function getBlackList($begin_openid = '') {
+        $url = $this->genUrl("cgi-bin/tags/members/getblacklist");
+        return $this->http($url, compact("begin_openid"));
+    }
+
+    /**
+     * 拉黑用户
+     * 每次调用最多可拉取 10000 个OpenID
+     * @param $openid_list ["OPENID1”,” OPENID2”]
+     * @return boolean
+     */
+    public function batchBlackList($openid_list) {
+        $url = $this->genUrl("cgi-bin/tags/members/batchblacklist");
+        return $this->http($url, ["openid_list" => $openid_list], 1);
+    }
+
+    /**
+     * 取消拉黑用户
+     * 每次调用最多可拉取 10000 个OpenID
+     * @param $openid_list ["OPENID1”,” OPENID2”]
+     * @return boolean
+     */
+    public function batchUnBlackList($openid_list) {
+        $url = $this->genUrl("cgi-bin/tags/members/batchunblacklist");
+        return $this->http($url, ["openid_list" => $openid_list], 1);
+    }
+
+    /**帐号管理***********************************************************/
+    /**
+     * 生成带参数的二维码
+     * 临时二维码，是有过期时间的，最长可以设置为在二维码生成后的30天（即2592000秒）后过期，但能够生成较多数量。
+     * 永久二维码，是无过期时间的，但数量较少（目前为最多10万个）。永久二维码主要用于适用于帐号绑定、用户来源统计等场景。
+     * 获取带参数的二维码的过程包括两步，首先创建二维码ticket，然后凭借ticket到指定URL换取二维码。
+     * @param $action_name 临时二维码 QR_SCENE | QR_STR_SCENE  永久二维码QR_LIMIT_SCENE | QR_LIMIT_STR_SCENE
+     * @param $scene
+     * @param $expire_seconds 最大不超过2592000（即30天），此字段如果不填，则默认有效期为30秒。
+     * @return object {"ticket":"Emm==","expire_seconds":60,"url":"http://in.qq.com/q/kZ"}
+     */
+    public function qrcodeCreate($action_name, $scene, $expire_seconds = 30) {
+        $url = $this->genUrl("cgi-bin/qrcode/create");
+        $data = [
+            'action_name' => $action_name,
+            'action_info' => [
+                'scene' => []
+            ]
+        ];
+        if ($action_name == 'QR_SCENE' || $action_name == 'QR_LIMIT_SCENE') {
+            //场景值ID，临时二维码时为32位非0整型，永久二维码时最大值为100000（目前参数只支持1--100000）
+            $data['action_info']['scene']['scene_id'] = $scene;
+        } else {
+            //场景值ID（字符串形式的ID），字符串类型，长度限制为1到64
+            $data['action_info']['scene']['scene_str'] = $scene;
+        }
+        if ($action_name == 'QR_SCENE' || $action_name == 'QR_STR_SCENE') {
+            $data['action_info']['expire_seconds'] = $expire_seconds;
+        }
+        return $this->http($url, $data);
+    }
+
+    /**
+     * 获取二维码ticket后，开发者可用ticket换取二维码图片。
+     * 正确情况下，http 返回码是200，是一张图片，可以直接展示或者下载。
+     * 错误情况下（如ticket非法）返回HTTP错误码404。
+     * @param $ticket
+     * @return resource
+     */
+    public function showQrcode($ticket) {
+        $url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' . urlencode($ticket);
+        return $this->httpGet($url);
+    }
+
+    /**
+     * 长链接转短链接接口
+     * 生成二维码的原链接（商品、支付二维码等）太长导致扫码速度和成功率下降，
+     * 将原长链接通过此接口转成短链接再生成二维码将大大提升扫码速度和成功率。
+     * @param $long_url 需要转换的长链接，支持http://、https://、weixin://wxpay 格式的url
+     * @return string short_url
+     */
+    public function shortUrl($long_url) {
+        $url = $this->genUrl("cgi-bin/shorturl");
+        return $this->http($url, ["action" => 'long2short', "long_url" => $long_url], 'short_url');
     }
 }
 
