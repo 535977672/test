@@ -129,6 +129,8 @@ function detail(id){
     var addr = $('.offerdetail_ditto_postage .delivery-addr').text().replace(/[\t\r\n]/g, '');
     var cost = $('.offerdetail_ditto_postage .obj-carriage .cost-entries .value').text();
     var deleted = 0;
+    var video = '';
+
     var re  = [
         0,
         id,
@@ -143,7 +145,8 @@ function detail(id){
         limit,
         addr,
         cost,
-        deleted
+        deleted,
+        video
     ];
     console.log(re);
     data.push(re);

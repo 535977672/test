@@ -141,6 +141,12 @@ function detail(id, BodyObj, url){
     var cost = 0;
     var deleted = 0;
 
+    var video = '';
+    var vi = BodyObj.find('#J_playVideo');
+    if(vi.length>0){
+        video = vi.attr('videourl');
+    }
+
     var re  = [
         0,
         id,
@@ -155,7 +161,8 @@ function detail(id, BodyObj, url){
         limit,
         addr,
         cost,
-        deleted
+        deleted,
+        video
     ];
     //console.log(re);
     data.push(re);
