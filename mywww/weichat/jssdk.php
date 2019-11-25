@@ -29,6 +29,7 @@ class JSSDK {
 
     /**
      * 验证消息的确来自微信服务器
+     * 验证一次
      * @return bool
      */
     public function checkSignature()
@@ -50,6 +51,10 @@ class JSSDK {
         }
     }
 
+    /**
+     * 网页获取jssdk配置信息
+     * @return array
+     */
     public function getSignPackage() {
         $jsapiTicket = $this->getJsApiTicket();
 
@@ -74,6 +79,68 @@ class JSSDK {
             "rawString" => $string
         );
         return $signPackage;
+    }
+
+    /**
+     * 通过code换取用户信息
+     * @param $code 授权获取的code参数
+     * @return array
+     */
+    public function getUserInfoByCode($code) {
+        $userInfo = [];
+        $access = $this->snsGetAccessTokenByCode($code);
+        if ($access) {
+            $access = $this->snsRefreshToken($access->refresh_token);
+            if ($access) {
+                $userInfo = $this->snsApiUserInfo($access->access_token, $access->openid);
+            }
+        }
+        return compact("userInfo", "access");
+    }
+
+    /**
+     * 通过code换取网页授权access_token
+     * 里通过code换取的是一个特殊的网页授权access_token,与基础支持中的access_token不同
+     * @param $code 授权获取的code参数
+     * @return object
+     */
+    public function snsGetAccessTokenByCode($code) {
+        $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='. $this->appId .'&secret='. $this->appSecret .'&code='. $code . '&grant_type=authorization_code';
+        return $this->http($url, '', 0, false);
+    }
+
+    /**
+     * 刷新access_token（如果需要）
+     * 由于access_token拥有较短的有效期，当access_token超时后，可以使用refresh_token进行刷新，refresh_token有效期为30天，
+     * 当refresh_token失效之后，需要用户重新授权。
+     * @param $refresh_token 填写通过access_token获取到的refresh_token参数
+     * @return object
+     */
+    public function snsRefreshToken($refresh_token) {
+        $url = 'https://api.weixin.qq.com/sns/oauth2/refresh_token?appid='. $this->appId .'&grant_type=refresh_token&refresh_token=' . $refresh_token;
+        return $this->http($url, '', 0, false);
+    }
+
+    /**
+     * 拉取用户信息(需scope为 snsapi_userinfo)
+     * @param $access_token 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
+     * @param $openid 用户的唯一标识
+     * @return object
+     */
+    public function snsApiUserInfo($access_token, $openid) {
+        $url = 'https://api.weixin.qq.com/sns/userinfo?access_token='. $access_token .'&openid='. $openid .'&lang=zh_CN';
+        return $this->http($url, '', 0, false);
+    }
+
+    /**
+     * 检验授权凭证（access_token）是否有效
+     * @param $access_token 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
+     * @param $openid 用户的唯一标识
+     * @return boolean
+     */
+    public function snsAuth($access_token, $openid) {
+        $url = 'https://api.weixin.qq.com/sns/auth?access_token='. $access_token .'&openid='. $openid;
+        return $this->http($url, '', 1, false);
     }
 
     private function createNonceStr($length = 16) {

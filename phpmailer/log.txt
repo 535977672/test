@@ -150,3 +150,27 @@ err 8345360
 1309Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
 err uty@ami
 1309Message could not be sent. Mailer Error: SMTP Error: data not accepted.
+suc 2387456
+suc 2387456
+suc 2387456
+err 2387456
+1363Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err iefclub
+1363Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 7802118
+1363Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 0487595
+1363Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+err 8345360
+1363Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
+suc uty@ami
+suc uty@ami
+suc uty@ami
+suc uty@ami
+suc uty@ami
+suc uty@ami
+err uty@ami
+1471Message could not be sent. Mailer Error: SMTP Error: data not accepted.
+suc 0214685
+err 0214685
+1489Message could not be sent. Mailer Error: SMTP Error: Could not authenticate.
