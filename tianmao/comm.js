@@ -288,3 +288,7 @@ function exportRaw(name, data) {
     save_link.download = name;
     fakeClick(save_link);
 }
+
+function myTrim(x) {
+    return x.replace(/^"+|"+$/gm,'');
+}

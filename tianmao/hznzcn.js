@@ -4,9 +4,9 @@ var url = 'https://www.hznzcn.com/yuncang/';
 var purl = 'https://www.hznzcn.com/yuncang/';
 var reg = /(<script[\s\S]*?<\/script>)|(<(link|meta)[\s\S]*?>)|(<style[\s\S]*?<\/style>)/igm;
 var totaldata = [];
-var id = 1;
+var id = 0;
 
-//saveMe(totaldata, 't.txt');
+//saveMe(totaldata, 't.php');
 
 $.get(url, function(re){
     var listurl = [];
@@ -15,6 +15,7 @@ $.get(url, function(re){
     $.each(list, function(i,v){
         listurl.push($(v).attr('href'));
     });
+    //listurl = ['https://www.hznzcn.com/product-1960154.html'];
     //console.log(listurl);
     getdetail(listurl);
     console.log(totaldata);
@@ -45,15 +46,12 @@ function detail(id, BodyObj, url){
         content = '';
         $.each(con, function(i, v){
             var c = $(v);
-            c.find('a').remove();
-            c.find('script').remove();
-            c.find('script').remove();
-            c.removeAttr("data-original");
-            c.removeAttr("style");
-            content = content+'<p>'+c.html()+'</p>';
+            content = content+'<p><img src="'+c.attr("data-original")+'" alt=""></p>';
             content = content.replace(/[\t\r\n]/g, '');
         });
         content = htmlspecialchars(content, 1);
+    }else{
+        return data;
     }
     //console.log(content);
     
@@ -66,7 +64,7 @@ function detail(id, BodyObj, url){
             if($(k).text() === '建议零售价'){
 
             }else{
-                temp = $(k).text();
+                temp = $(k).text().trim();
                 temp = temp.replace(/[\t\r\n]/g, '');
                 attr.push(temp);
                 temp = '';
@@ -74,6 +72,7 @@ function detail(id, BodyObj, url){
         });
     }
     attr = JSON.stringify(attr);
+    attr = myTrim(attr);
     attr = attr.replace(/\//g, '\\\\/');
     
     //cover
@@ -87,6 +86,7 @@ function detail(id, BodyObj, url){
         });
     }
     cover = JSON.stringify(cover);
+    cover = myTrim(cover);
     cover = cover.replace(/\//g, '\\\\/');
 
     //price
@@ -106,6 +106,7 @@ function detail(id, BodyObj, url){
             $.each(objSku, function(i, v){
                 var temp2 = {};
                 temp2.name = $(v).find('.sizeT').text();
+                temp2.alt = '';
                 temp2.price = $(v).find('.priceT').text().replace('元', '');
                 temp2.count = 20;
                 sku.push(temp2);
@@ -121,6 +122,7 @@ function detail(id, BodyObj, url){
         $.each(objSku, function(i, v){
             var temp2 = {};
             temp2.name = $(v).find('.sizeT').text();
+            temp2.alt = '';
             temp2.price = $(v).find('.priceT').text().replace('元', '');
             temp2.count = 20;
             sku.push(temp2);
@@ -129,6 +131,7 @@ function detail(id, BodyObj, url){
         price.push(temp1);
     }
     price = JSON.stringify(price);
+    price = myTrim(price);
     price = price.replace(/\//g, '\\\\/');
     
     
@@ -138,7 +141,7 @@ function detail(id, BodyObj, url){
     limit = 1;
     
     var addr = '杭州';
-    var cost = 0;
+    var cost = 4.5;
     var deleted = 0;
 
     var video = '';
@@ -178,7 +181,8 @@ function getdetail(listurl){
                 var BodyObj = $(re.replace(reg, ''));
                 var d1 = detail(id, BodyObj, v);
                 //console.log(d1);
-                totaldata = totaldata.concat(d1);
+                //totaldata = totaldata.concat(d1);
+                totaldata.push(d1[0]);
             }
         });
     });
