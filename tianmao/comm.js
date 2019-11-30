@@ -32,8 +32,11 @@ var saveAs = saveAs || (function(view) {
     , save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a") 
     , can_use_save_link = "download" in save_link 
     , click = function(node) { 
-      var event = new MouseEvent("click"); 
-      node.dispatchEvent(event); 
+      //var event = new MouseEvent("click");
+            var event = document.createEvent("MouseEvents");
+            event.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      node.dispatchEvent(event);
+
     } 
     , is_safari = /constructor/i.test(view.HTMLElement) || view.safari 
     , is_chrome_ios =/CriOS\/[\d]+/.test(navigator.userAgent) 
@@ -269,4 +272,23 @@ function setlocalData(name, value){
 
 function dellocalData(name){
     localStorage.removeItem(name);
+}
+
+function fakeClick(obj) {
+    var ev = document.createEvent("MouseEvents");
+    ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    obj.dispatchEvent(ev);
+}
+
+function exportRaw(name, data) {
+    var urlObject = window.URL || window.webkitURL || window;
+    var export_blob = new Blob([data]);
+    var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a")
+    save_link.href = urlObject.createObjectURL(export_blob);
+    save_link.download = name;
+    fakeClick(save_link);
+}
+
+function myTrim(x) {
+    return x.replace(/^"+|"+$/gm,'');
 }

@@ -6,7 +6,7 @@ class Ct
     public $port = '3306';
     public $db = 'test';
     public $root = 'root';
-    public $pwd = '11111111';
+    public $pwd = 'root';
     public $options = [
         PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'', 
         PDO::ATTR_PERSISTENT => true,

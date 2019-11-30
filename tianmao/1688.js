@@ -27,8 +27,10 @@ function detail(id){
             content = content.replace(/[\t\r\n]/g, '');
         });
         content = htmlspecialchars(content, 1);
+    }else{
+        return data;
     }
-    console.log(content);
+    //console.log(content);
     
     //attr
     var attributes = $('#mod-detail-attributes .obj-content td');
@@ -53,6 +55,7 @@ function detail(id){
         });
     }
     attr = JSON.stringify(attr);
+    attr = myTrim(attr);
     attr = attr.replace(/\//g, '\\\\/');
     
     //cover
@@ -66,6 +69,7 @@ function detail(id){
         });
     }
     cover = JSON.stringify(cover);
+    cover = myTrim(cover);
     cover = cover.replace(/\//g, '\\\\/');
 
     //price
@@ -118,6 +122,7 @@ function detail(id){
         price.push(temp1);
     }
     price = JSON.stringify(price);
+    price = myTrim(price);
     price = price.replace(/\//g, '\\\\/');
     
     
@@ -128,7 +133,9 @@ function detail(id){
     
     var addr = $('.offerdetail_ditto_postage .delivery-addr').text().replace(/[\t\r\n]/g, '');
     var cost = $('.offerdetail_ditto_postage .obj-carriage .cost-entries .value').text();
-    
+    var deleted = 0;
+    var video = '';
+
     var re  = [
         0,
         id,
@@ -142,7 +149,9 @@ function detail(id){
         title,
         limit,
         addr,
-        cost
+        cost,
+        deleted,
+        video
     ];
     console.log(re);
     data.push(re);
@@ -150,7 +159,7 @@ function detail(id){
 }
 
 //load data infile 'C:/Users/Administrator/Desktop/t.txt' into table `test`;
-var id = '324324';
+var id = 0;
 var d1 = detail(id);
 
 setlocalData('detail2_'+id,d1);
