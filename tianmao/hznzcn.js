@@ -1,26 +1,51 @@
 //铺货头hznzcn
+var listurls = '';
 
-var url = 'https://www.hznzcn.com/yuncang/';
-var purl = 'https://www.hznzcn.com/yuncang/';
 var reg = /(<script[\s\S]*?<\/script>)|(<(link|meta)[\s\S]*?>)|(<style[\s\S]*?<\/style>)/igm;
 var totaldata = [];
 var id = 0;
 
-//saveMe(totaldata, 't.php');
+var sex = 2;
+var urls = [
+    'https://www.hznzcn.com/yuncang/list-1.html',
+    'https://www.hznzcn.com/yuncang/list-2.html',
+    'https://www.hznzcn.com/yuncang/list-3.html',
+    'https://www.hznzcn.com/yuncang/list-1.html?q_sort=2&q_sortT=1',
+    'https://www.hznzcn.com/yuncang/list-2.html?q_sort=2&q_sortT=1',
+    'https://www.hznzcn.com/yuncang/list-3.html?q_sort=2&q_sortT=1'
+];
 
-$.get(url, function(re){
-    var listurl = [];
-    var BodyObj = $(re.replace(reg, ''));
-    var list = BodyObj.find('#productList_Div li .rowTitle a');
-    $.each(list, function(i,v){
-        listurl.push($(v).attr('href'));
+getdata(urls);
+saveMe(totaldata, 't.php');
+
+function getdata(urls){
+    if(!listurls) {
+        var tmplisturls = localStorage.getItem('listurls');
+        listurls = tmplisturls?tmplisturls.split(','):[];
+    }
+    $.each(urls, function(i,v){
+        $.ajax({
+            url:v,
+            async: false,
+            success:function(re){
+                var listurl = [];
+                var BodyObj = $(re.replace(reg, ''));
+                var list = BodyObj.find('#productList_Div li .rowTitle a');
+                $.each(list, function(i,v){
+                    if(listurls.indexOf ($(v).attr('href')) == -1){
+                        listurl.push($(v).attr('href'));
+                        listurls.push($(v).attr('href'));
+                    }
+                });
+                //listurl = ['https://www.hznzcn.com/product-1960154.html'];
+                //console.log(listurl);
+                getdetail(listurl);
+                //console.log(totaldata);
+            }
+        });
     });
-    //listurl = ['https://www.hznzcn.com/product-1960154.html'];
-    //console.log(listurl);
-    getdetail(listurl);
-    console.log(totaldata);
-});
-
+    localStorage.setItem('listurls', listurls);
+}
 
 function detail(id, BodyObj, url){
     //console.log(BodyObj);
@@ -39,7 +64,9 @@ function detail(id, BodyObj, url){
     var price = [];
     var title = '';
     var limit = 1;
-    
+    var cate = '';
+    var prices = 0;
+
     //content
     var con = BodyObj.find('#detail_img img');
     if(con.length>0){
@@ -96,9 +123,11 @@ function detail(id, BodyObj, url){
             //img cover
             var imgs = $(k);
             var temp1 = {};
-            if(typeof($(k).attr("thumbnailaddress")) == "undefined"){
+            if(typeof($(k).attr("thumbnailaddress")) != "undefined"){
                 temp1.preview = imgs.attr('hrthumbnail');
                 temp1.thumb = imgs.attr('thumbnailaddress');
+            }else{
+                temp1.thumb = imgs.attr('text');
             }
             temp1.alt = imgs.attr('text');
             var sku = [];
@@ -110,6 +139,7 @@ function detail(id, BodyObj, url){
                 temp2.price = $(v).find('.priceT').text().replace('元', '');
                 temp2.count = 20;
                 sku.push(temp2);
+                if(!prices) prices = temp2.price;
             });
             temp1.sku = sku;
             price.push(temp1);
@@ -126,6 +156,7 @@ function detail(id, BodyObj, url){
             temp2.price = $(v).find('.priceT').text().replace('元', '');
             temp2.count = 20;
             sku.push(temp2);
+            if(!prices) prices = temp2.price;
         });
         temp1.sku = sku;
         price.push(temp1);
@@ -139,15 +170,16 @@ function detail(id, BodyObj, url){
     title = BodyObj.find('.detail-midtitle h1').text().replace(/[\t\r\n]/g, '');
     //limit
     limit = 1;
-    
-    var addr = '杭州';
+    cate = BodyObj.find('.colSiRed').text();
+
+    var addr = BodyObj.find('.Detail-toptitle a:nth-of-type(2)').text();
     var cost = 4.5;
     var deleted = 0;
 
     var video = '';
     var vi = BodyObj.find('#J_playVideo');
     if(vi.length>0){
-        video = vi.attr('videourl');
+        video = vi.attr('videourl').replace(/[\t\r\n]/g, '');
     }
 
     var re  = [
@@ -165,7 +197,10 @@ function detail(id, BodyObj, url){
         addr,
         cost,
         deleted,
-        video
+        video,
+        cate,
+        sex,
+        prices
     ];
     //console.log(re);
     data.push(re);
