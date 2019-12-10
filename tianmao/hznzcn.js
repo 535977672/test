@@ -1,4 +1,4 @@
-//铺货头hznzcn
+//铺货头hznzcn 
 var listurls = '';
 
 var reg = /(<script[\s\S]*?<\/script>)|(<(link|meta)[\s\S]*?>)|(<style[\s\S]*?<\/style>)/igm;
