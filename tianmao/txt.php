@@ -1,8 +1,8 @@
 <?php
 
-$fileName = 'C:/Users/Administrator/Desktop/mtxt.txt';
+$fileName = 'C:/Users/Administrator/Desktop/mtxt.php';
 
-$dir = 'C:/Users/Administrator/Desktop/11/*.txt';
+$dir = 'C:/Users/Administrator/Desktop/11/*.php';
 
 $myfilea = fopen($fileName, "a");
 foreach (glob($dir) as $readName) {

@@ -10,6 +10,10 @@ function detail(id){
     var price = [];
     var title = '';
     var limit = 1;
+    var cate = '';
+    var sex = sex;
+
+    var prices = 0;
     
     //content
     var con = $('.de-description-detail p');
@@ -95,6 +99,7 @@ function detail(id){
                     temp2.price = $(v).find('.price .value').text();
                     temp2.count = $(v).find('.count .value').text();
                     sku.push(temp2);
+                    if(!prices) prices = temp2.price;
                 });
                 temp1.sku = sku;
                 price.push(temp1);
@@ -117,6 +122,7 @@ function detail(id){
             temp2.price = $(v).find('.price .value').text();
             temp2.count = $(v).find('.count .value').text();
             sku.push(temp2);
+            if(!prices) prices = temp2.price;
         });
         temp1.sku = sku;
         price.push(temp1);
@@ -135,6 +141,9 @@ function detail(id){
     var cost = $('.offerdetail_ditto_postage .obj-carriage .cost-entries .value').text();
     var deleted = 0;
     var video = '';
+    var is_hot = 0;
+    var is_new = 0;
+    var is_recommend = 0;
 
     var re  = [
         0,
@@ -151,7 +160,13 @@ function detail(id){
         addr,
         cost,
         deleted,
-        video
+        video,
+        cate,
+        sex,
+        prices,
+        is_hot,
+        is_new,
+        is_recommend
     ];
     console.log(re);
     data.push(re);
@@ -160,6 +175,7 @@ function detail(id){
 
 //load data infile 'C:/Users/Administrator/Desktop/t.txt' into table `test`;
 var id = 0;
+var sex = 0;
 var d1 = detail(id);
 
 setlocalData('detail2_'+id,d1);
