@@ -141,6 +141,9 @@ function detail(id){
     var cost = $('.offerdetail_ditto_postage .obj-carriage .cost-entries .value').text();
     var deleted = 0;
     var video = '';
+    var is_hot = 0;
+    var is_new = 0;
+    var is_recommend = 0;
 
     var re  = [
         0,
@@ -160,7 +163,10 @@ function detail(id){
         video,
         cate,
         sex,
-        prices
+        prices,
+        is_hot,
+        is_new,
+        is_recommend
     ];
     console.log(re);
     data.push(re);
