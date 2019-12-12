@@ -173,7 +173,7 @@ function detail(id){
     return data;
 }
 
-//load data infile 'C:/Users/Administrator/Desktop/t.txt' into table `test`;
+//load data infile 'C:/Users/Administrator/Desktop/t.txt' into table `test` character set utf8mb4;;
 var id = 0;
 var sex = 0;
 var d1 = detail(id);
