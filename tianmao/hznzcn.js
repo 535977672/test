@@ -354,18 +354,50 @@ function getdetail(listurl, vd){
 }
 
 //批量上传
+var idssss = [];
+
 function mulup(){
-	var ids = '1985859,1560375,1521548,1516165,883867,1965313,1965312,1965296,1777042,1560371,1667640,1535702,1516161,770285,1766554,1717389,1668045,1599077,1535700,1413310,770410,763947,672034,672008,649432,649419,525256,1965316,1985872,1985868,1985866,1985865,1985861,1985860,1965318,1965317,1965314,1965311,1965304,1965300,1965299,1985874,1985873,1985871,1985870,1985869,1985867,1985864,1985863,1985862,1965315,1965309,1965308,1965307,1965306,1965305,1965303,1965302,1965301,1965298,1965297,1965295,1777051,1777046,1441187,763959,1768466,1766580,1766573,1766569,1766558,1766555,1766553,1766551,1619555,1619547,1615985,1603046,1574184,1560360,1544392,1544257,1516166,1444528,1444525,1444520,1444519,1441192,1441178,1441177,771937,770471,770287,769347,769345,769342,763960,746478,746466,746454,746449,717674,717673,1768465,1768464,1768463,1768462,1768461,1768460,1768459,1768458,1768457,1768456,1768455,1766578,1766575,1766571,1766567,1766565,1766563';
-	ids = ids.split(',');
-	domulup(ids);
+	var urlss = [
+	    //'https://www.hznzcn.com/yuncang/list-1.html',
+        'https://www.hznzcn.com/yuncang/list-2.html',
+        'https://www.hznzcn.com/yuncang/list-3.html'
+    ];
+    idssss = mulupids(urlss);
 }
-function domulup(ids, tt = 1000){
+function mulupids(urls){
+    var ids = [];
+    $.each(urls, function(i,v){
+        $.ajax({
+            url:v,
+            async: false,
+            success:function(re){
+                var BodyObj = $(re);
+                var list = BodyObj.find('#productList_Div li .rowTitle a');
+                $.each(list, function(i,v){
+                    var sss = $(v).attr('href');
+                    var osss = sss.substring(sss.lastIndexOf('-')+1, sss.lastIndexOf('.'));
+                    ids.push(osss);
+                });
+            }
+        });
+    });
+    return ids;
+}
+
+function xhdo($t = 3000){
+    setTimeout(function(){
+        domulup([idssss.pop()]);
+        xhdo(3000);
+    }, $t);
+}
+function domulup(ids){
+    console.log('total'+ ids.length);
 	$.each(ids, function(i,v){
+        console.log('sub'+ v+'_'+(ids.length-i));
 		var id = v;
 		//show_uploadPlatform(id, '1');
 		//uploadProductWithoutItem($('.uploadLink .dif-lit-pt:last a'));
 		uploadProductWithoutItem($('<a href="javascript:void(0);" onclick="uploadProductWithoutItem(this)" productid="'
 			+id+'" platform="9" rel="nofollow"><img src="https://img.hznzcn.com/imgs/productItem/pddIcoMax.png" alt=""><p>传拼多多</p></a>'));
-		sleep(tt);
 	});
 }
