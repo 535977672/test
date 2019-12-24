@@ -10,7 +10,7 @@ var src = '';
 
 var iObj = document.querySelectorAll('#mod-detail-bd .tab-trigger');
 iObj.forEach(function(v, i){
-	src += ' '+JSON.parse(v.getAttribute("data-imgs")).preview;
+	src += ' '+JSON.parse(v.getAttribute("data-imgs")).original;
 });
 
 var iObj = document.querySelectorAll('#desc-lazyload-container img');
