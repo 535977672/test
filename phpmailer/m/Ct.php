@@ -62,6 +62,7 @@ class Ct
                 }
             }
         }
+        if($len<$limit) file_put_contents('./m/pos.ini', 0);
         return $re;
     }
     
