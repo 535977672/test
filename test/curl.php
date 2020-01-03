@@ -1,15 +1,23 @@
 <?php
+set_time_limit(0);
+ini_set('memory_limit', '-1');
+ini_set('max_execution_time', 0);
 if(isset($_GET['type']) && $_GET['type'] == 1){
 var_dump($_SERVER);
 }else{
-
-    test();
+$k = 1;
+    for($k; $k < 1000; $k++){
+        test();
+        sleep(1);
+    }
 }
 function test(){
-    $re = doCurlGetRequest('http://test.test.com/test/curl.php?type=1');
-    var_dump($re);
+    $id = 283458;
+    $re = doCurlGetRequest('http://cqwz.cqnews.net/ask/askDetailCount?id='.$id);
+    //var_dump($re);
 }
-function doCurlGetRequest($url,$requestString = '',$timeout = 15){
+function doCurlGetRequest($url,$requestString = '',$timeout = 30){
+    $id = 283458;
     if(empty($url)|| empty($timeout)){
         return false;
     }
@@ -25,9 +33,9 @@ function doCurlGetRequest($url,$requestString = '',$timeout = 15){
 
     curl_setopt($con, CURLOPT_SSL_VERIFYPEER, 0);
 
-    $ip = '127.0.0.1';//get_rand_ip();
-    $refer = 'https://www.cnblogs.com/xuey/p/8464551.html';
-    curl_setopt($con, CURLOPT_HTTPHEADER, array("X-FORWARDED-FOR:$ip", "CLIENT-IP:$ip", "Referer: $refer")); //构造IP
+    $ip = get_rand_ip();$ip2 = get_rand_ip();
+    $refer = 'http://cqwz.cqnews.net/ask/askDetail?id='.$id;
+    curl_setopt($con, CURLOPT_HTTPHEADER, array("X-FORWARDED-FOR:$ip", "CLIENT-IP:$ip2", "Referer: $refer")); //构造IP
     curl_setopt($con, CURLOPT_USERAGENT, get_rand_agent()); //模拟常用浏览器的useragent
     curl_setopt ($con,CURLOPT_REFERER,$url);
 
