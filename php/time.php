@@ -39,7 +39,7 @@ timetoecho(strtotime(date("Y-m-d H:i:s") . "-1 week last Sunday -2 day"), 'strto
 echo '<br/>日期';
 datetoecho(strtotime('2030-11-09 12:12:09'));
 
-dmonth(strtotime('2030-11-09 12:12:09'), strtotime('2019-01-19 12:12:09'));
+dmonth(strtotime('2020-11-09 12:12:09'), strtotime('2019-01-19 12:12:09'));
 
 dday(strtotime('2030-11-09 12:12:09'), strtotime('2030-11-19 22:32:09'));
 
@@ -76,11 +76,16 @@ function dmonth($time1, $time2, $s = ''){
     
     echo '<br/>date: ' . date('Y-m-d H:i:s', $time1);
     echo '<br/>date: ' . date('Y-m-d H:i:s', $time2);
-    
-    $y = abs((int)date("Y", $time2)-(int)date("Y", $time1));
-    $m = abs((int)date("n", $time2)-(int)date("n", $time1));
 
-    echo '<br/>'.$s.' 相差月份 (abs((int)date("Y", $time2)-(int)date("Y", $time1))*10)+abs((int)date("n", $time2)-(int)date("n", $time1)): ' . (($y*12)+$m);
+    $y1 = (int)date("Y", $time2);
+    $y2 = (int)date("Y", $time1);
+    $m1 = (int)date("n", $time2);
+    $m2 = (int)date("n", $time1);
+    $y = abs($y1-$y2);
+    $m = $y1>$y2?(12-$m2+$m1):($y1<$y2?(12-$m1+$m2):(abs($m1-$m2)));
+    $y = $y>1?($y-1):0;
+
+    echo '<br/>'.$s.' 相差月份 : ' . (($y*12)+$m);
     
     echo '<br/><br/>';
 }

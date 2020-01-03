@@ -1,0 +1,2 @@
+php mailmul.php
+pause
