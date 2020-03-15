@@ -1,0 +1,84 @@
+echo  语言结构
+print  语言结构 echo 最主要的区别： print 仅支持一个参数，并总是返回 1。
+printf 输出格式化字符串 printf('%.2f', 132);
+
+explode 使用一个字符串分割另一个字符串
+implode 将一个一维数组的值转化为字符串
+
+html_entity_decode
+htmlentities 将字符转换为 HTML 转义字符 单双引
+htmlspecialchars_decode 将特殊的 HTML 实体转换回普通字符
+htmlspecialchars 将特殊字符转换为 HTML 实体
+
+ltrim
+rtrim
+trim
+md5
+str_replace
+str_ireplace
+strip_tags 从字符串中去除 HTML 和 PHP 标记
+strlen
+strtolower
+strtoupper
+substr
+
+srtpos 查找字符串首次出现的位置
+strrpos 最后一次出现的位置
+strstr 查找字符串的首次出现
+strrchr 查找指定字符在字符串中的最后一次出现
+
+chunk_split 将字符串分割成小块
+count_chars 返回字符串所用字符的信息
+lcfirst 使一个字符串的第一个字符小写
+ucfirst 
+ucwords 每个单词的首字母转换为大写
+parse_str  将字符串解析成多个变量
+str_pad  使用另一个字符串填充字符串为指定长度
+str_shuffle 随机打乱一个字符串
+str_split — 将字符串转换为数组
+
+sort rsort
+asort arsort ksort krsort 数组索引键保持
+natsort()自然排序 natcasesort()大小写不敏感
+shuffle 打乱数组
+
+array_key_exists
+array_keys
+array_merge_recursive — 递归地合并一个或多个数组
+array_merge — 合并一个或多个数组
+array_pop
+array_push
+array_shift 将数组开头的单元移出数组
+array_unshift
+array_product 计算数组中所有值的乘积
+array_sum
+array_rand
+array_reduce 用回调函数迭代地将数组简化为单一的值
+array_reverse 返回单元顺序相反的数组
+array_unique
+array_values
+compact 建立一个数组，包括变量名和它们的值
+count
+in_array
+
+array_chunk 将一个数组分割成多个
+array_column 返回数组中指定的一列
+array_combine  创建一个数组，用一个数组的值作为其键名，另一个数组的值作为其值
+array_fill_keys — 使用指定的键和值填充数组
+array_fill — 用给定的值填充数组
+array_flip 交换数组中的键和值
+array_map 为数组的每个元素应用回调函数
+array_multisort — 对多个数组或多维数组进行排序
+array_pad — 以指定长度将一个值填充进数组
+array_replace — 使用传递的数组替换第一个数组的元素
+array_search
+
+
+
+
+
+
+
+
+
+
