@@ -6,18 +6,18 @@ if(isset($_GET['type']) && $_GET['type'] == 1){
 var_dump($_SERVER);
 }else{
 $k = 1;
-    for($k; $k < 1000; $k++){
+    for($k; $k < 100000; $k++){
         test();
         sleep(1);
     }
 }
 function test(){
-    $id = 283458;
+    $id = 328061;
     $re = doCurlGetRequest('http://cqwz.cqnews.net/ask/askDetailCount?id='.$id);
     //var_dump($re);
 }
 function doCurlGetRequest($url,$requestString = '',$timeout = 30){
-    $id = 283458;
+    $id = 328061;
     if(empty($url)|| empty($timeout)){
         return false;
     }
